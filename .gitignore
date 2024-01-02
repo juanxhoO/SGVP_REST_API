@@ -16,6 +16,6 @@ coverage
 
 # Dev db data
 db
-
+data
 # TypeScript
 build

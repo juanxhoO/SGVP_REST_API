@@ -23,52 +23,49 @@ model User {
 }
 
 model Vehicle {
-  id   String @default() @uuid
+  id   String        @id @default(uuid())
   name String
   type VehicleType[]
 }
 
 model Reportes {
-  id   String @default() @uuid
+  id   String @id @default(uuid())
   name String
   type String
 }
 
 model informe {
-  id   String @default() @uuid
+  id   String @id @default(uuid())
   name String
   type String
 }
 
 model Circuito {
-  id   String @default() @uuid
+  id   String @id @default(uuid())
   name String
   type String
 }
 
 model Subcircuito {
-  id   String @default() @uuid
+  id   String @id @default(uuid())
   name String
   type String
 }
 
 model Provincia {
-  id   String @default() @uuid
+  id   String @id @default(uuid())
   name String
   type String
 }
 
-model Parroquia {
-}
-
 model Ordenes {
-  id   String @default() @uuid
+  id   String @id @default(uuid())
   name String
   type String
 }
 
 model Manteniminto {
-  id   String @default() @uuid
+  id   String @id @default(uuid())
   name String
   type String
 }
@@ -92,7 +89,7 @@ enum Role {
   ADMIN
 }
 
-enum VehicleType{
+enum VehicleType {
   BIKE
 }
 
