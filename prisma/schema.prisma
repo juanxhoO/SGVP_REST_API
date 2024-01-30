@@ -11,21 +11,20 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
-  email           String   @unique
+  id              Int       @id @default(autoincrement())
+  email           String    @unique
   name            String?
   lastname        String?
   phone           String?
-  idCard          String?
   password        String
   id_card         String
-  birthday        DateTime
+  birthdate       DateTime?
   bloodType       String?
   vehicle         Vehicle[]
-  role            Role     @default(USER)
-  isEmailVerified Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  role            Role      @default(USER)
+  isEmailVerified Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   Token           Token[]
 }
 
@@ -35,69 +34,60 @@ model Range {
 }
 
 model Vehicle {
-  id             String        @id @default(uuid())
-  name           String
-  images         String
-  chasis         String
-  model          String
-  plate          String
-  engine_cc      Int
-  engine_type    String
+  id              String        @id @default(uuid())
+  name            String
+  images          String
+  chasis          String
+  model           String
+  plate           String
+  engine_cc       Int
+  engine_type     String
   charge_capacity Int
-  occupants      Int
-  mileage        Int
-  type           VehicleType[]
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
-
+  occupants       Int
+  mileage         Int
+  type            VehicleType[]
+  user            User          @relation(fields: [userId], references: [id])
+  userId          Int
 }
 
-model Reportes {
-  id   String @id @default(uuid())
-  name String
-  type String
-}
-
-model Informe {
-  id   String @id @default(uuid())
-  name String
-  type String
+model Report {
+  id        String   @id @default(uuid())
+  name      String
+  files     String
+  images    String
+  content   String
+  userId    Int
+  date      DateTime
+  createdAt DateTime
 }
 
 model Mecanica {
   id   String @id @default(uuid())
   name String
-  type String
 }
 
 model Circuito {
-  id   String @id @default(uuid())
-  name String
-  type String
+  id        String   @id @default(uuid())
+  name      String
+  image     String
+  createdAt DateTime
 }
 
-model Subcircuito {
+model Parroquia {
   id   String @id @default(uuid())
   name String
-  type String
-}
-
-model Provincia {
-  id   String @id @default(uuid())
-  name String
-  type String
-}
-
-model Ordenes {
-  id   String @id @default(uuid())
-  name String
-  type String
 }
 
 model Repuesto {
-  id   String @id @default(uuid())
-  name String
-  type String
+  id        String @id @default(uuid())
+  name      String
+  image     String
+  sku       String
+  stock     Int
+  price     Float
+  condition String
+  brand     String
+  model     String
 }
 
 model Manteniminto {
