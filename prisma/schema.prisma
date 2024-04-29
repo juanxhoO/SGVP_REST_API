@@ -19,7 +19,7 @@ model User {
   password        String
   id_card         String?
   birthdate       DateTime?
-  birthplace      String
+  birthplace      String?
   bloodType       String?
   vehicle         Vehicle[]
   role            Role      @default(USER)

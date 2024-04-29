@@ -14,17 +14,17 @@ const createUser = async (
   password: string,
   role: Role = Role.USER,
   name?: string
-
 ): Promise<User> => {
   if (await getUserByEmail(email)) {
+    getUserByEmail(email)
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
   return prisma.user.create({
     data: {
       email,
       password: await encryptPassword(password),
-      role,
-      name
+      name,
+      role
     }
   });
 };
@@ -107,10 +107,6 @@ const getUserByEmail = async <Key extends keyof User>(
   keys: Key[] = [
     'id',
     'email',
-    'name',
-    'lastname',
-    'password',
-    'role',
     'isEmailVerified',
     'createdAt',
     'updatedAt'

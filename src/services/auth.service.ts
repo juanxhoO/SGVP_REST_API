@@ -19,6 +19,7 @@ const loginUserWithEmailAndPassword = async (
   password: string
 ): Promise<Omit<User, 'password'>> => {
   const user = await userService.getUserByEmail(email);
+  console.log(user)
   if (!user || !(await isPasswordMatch(password, user.password as string))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
