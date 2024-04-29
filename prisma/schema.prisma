@@ -17,7 +17,7 @@ model User {
   lastname        String?
   phone           String?
   password        String
-  id_card         String
+  id_card         String?
   birthdate       DateTime?
   bloodType       String?
   vehicle         Vehicle[]
@@ -34,7 +34,7 @@ model Range {
 }
 
 model Vehicle {
-  id              String        @id @default(uuid())
+  id              Int       @id @default(autoincrement())
   name            String
   images          String
   chasis          String
@@ -46,8 +46,8 @@ model Vehicle {
   occupants       Int
   mileage         Int
   type            VehicleType[]
-  user            User          @relation(fields: [userId], references: [id])
-  userId          Int
+  user            User?          @relation(fields: [userId], references: [id])
+  userId          Int?
 }
 
 model Report {
