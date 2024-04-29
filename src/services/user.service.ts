@@ -12,8 +12,9 @@ import { encryptPassword } from '../utils/encryption';
 const createUser = async (
   email: string,
   password: string,
-  name?: string,
-  role: Role = Role.USER
+  role: Role = Role.USER,
+  name?: string
+
 ): Promise<User> => {
   if (await getUserByEmail(email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
@@ -21,9 +22,9 @@ const createUser = async (
   return prisma.user.create({
     data: {
       email,
-      name,
       password: await encryptPassword(password),
-      role
+      role,
+      name
     }
   });
 };

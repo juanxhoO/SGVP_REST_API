@@ -19,6 +19,7 @@ model User {
   password        String
   id_card         String
   birthdate       DateTime?
+  birthplace      String
   bloodType       String?
   vehicle         Vehicle[]
   role            Role      @default(USER)
@@ -28,24 +29,20 @@ model User {
   Token           Token[]
 }
 
-model Range {
-  id    String @id @default(uuid())
-  range String
-}
-
 model Vehicle {
   id              String        @id @default(uuid())
   name            String
   images          String
   chasis          String
   model           String
+  brand           String
   plate           String
   engine_cc       Int
-  engine_type     String
-  charge_capacity Int
-  occupants       Int
+  engine          String
+  carringcapacity Int
+  passengers       Int
   mileage         Int
-  type            VehicleType[]
+  vehicletype            VehicleType[]
   user            User          @relation(fields: [userId], references: [id])
   userId          Int
 }
@@ -64,13 +61,35 @@ model Report {
 model Mecanica {
   id   String @id @default(uuid())
   name String
+  email String
+  address String
+  phone String
+}
+
+
+model Contract {
+  id   String @id @default(uuid())
+  name String
+  mecanicId String
+  type    String
+  createdAt DateTime
+
 }
 
 model Circuito {
   id        String   @id @default(uuid())
   name      String
   image     String
+  code      String
   createdAt DateTime
+}
+
+
+model Distrito {
+  id   String @id @default(uuid())
+  name String
+  code String
+  image String
 }
 
 model Parroquia {
@@ -90,11 +109,39 @@ model Repuesto {
   model     String
 }
 
-model Manteniminto {
+model Notification {
   id   String @id @default(uuid())
   name String
   type String
 }
+
+
+model MaintenanceType {
+  id   String @id @default(uuid())
+  name String
+  price
+  details
+}
+
+model MaintenanceOrder {
+  id   String @id @default(uuid())
+  createdAt   DateTime
+  mecanicId
+  userId
+  name String
+  maintenanceType
+  maintenanceTypeID
+}
+
+model File {
+  id   String @id @default(uuid())
+  createdAt   DateTime
+  userId
+  name String
+  reference_url
+  type
+}
+
 
 model Token {
   id          Int       @id @default(autoincrement())
@@ -110,13 +157,28 @@ model Token {
 enum Role {
   USER
   MECHANIC
-  TECHNIC1
-  TECHNIC2
+  TECHNIC
   ADMIN
+  MANAGEMENT
+}
+
+enum OfficeRank {
+  TENIENTE_CORONEL
+  SARGENTO_PRIMERO
+  SARGENTO_SEGUNDO
+  CABO_PRIMERO
+  CABO_SEGUNDO
+  TENIENTE
+  MAYOR
+  CAPITAN
+  POLICIA
+  SUBTENIENTE
 }
 
 enum VehicleType {
-  BIKE
+  MOTORBIKE
+  SEDAN
+  SUV
 }
 
 enum TokenType {
