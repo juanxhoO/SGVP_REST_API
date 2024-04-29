@@ -19,6 +19,7 @@ model User {
   password        String
   id_card         String?
   birthdate       DateTime?
+  birthplace      String
   bloodType       String?
   vehicle         Vehicle[]
   role            Role      @default(USER)
@@ -28,26 +29,22 @@ model User {
   Token           Token[]
 }
 
-model Range {
-  id    String @id @default(uuid())
-  range String
-}
-
 model Vehicle {
-  id              Int       @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   name            String
   images          String
   chasis          String
   model           String
+  brand           String
   plate           String
   engine_cc       Int
-  engine_type     String
-  charge_capacity Int
-  occupants       Int
+  engine          String
+  carringcapacity Int
+  passengers      Int
   mileage         Int
-  type            VehicleType[]
-  user            User?          @relation(fields: [userId], references: [id])
-  userId          Int?
+  vehicletype     VehicleType[]
+  user            User          @relation(fields: [userId], references: [id])
+  userId          Int
 }
 
 model Report {
@@ -62,23 +59,42 @@ model Report {
 }
 
 model Mecanica {
-  id   String @id @default(uuid())
-  name String
+  id      String @id @default(uuid())
+  name    String
+  email   String
+  address String
+  phone   String
 }
 
-model Circuito {
+model Contract {
   id        String   @id @default(uuid())
   name      String
-  image     String
+  mecanicId String
+  type      String
   createdAt DateTime
 }
 
-model Parroquia {
+model Circuit {
+  id        String   @id @default(uuid())
+  name      String
+  image     String
+  code      String
+  createdAt DateTime
+}
+
+model Distrit {
+  id    String @id @default(uuid())
+  name  String
+  code  String
+  image String
+}
+
+model City {
   id   String @id @default(uuid())
   name String
 }
 
-model Repuesto {
+model Spare {
   id        String @id @default(uuid())
   name      String
   image     String
@@ -90,10 +106,33 @@ model Repuesto {
   model     String
 }
 
-model Manteniminto {
+model Notification {
   id   String @id @default(uuid())
   name String
   type String
+}
+
+model Maintenance {
+  id      String @id @default(uuid())
+  name    String
+  price   Float
+  details String
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  createdAt DateTime
+  mecanicId Int
+  userId    Int
+  name      String
+}
+
+model File {
+  id            String   @id @default(uuid())
+  createdAt     DateTime
+  name          String
+  reference_url String
+  type          String
 }
 
 model Token {
@@ -110,13 +149,28 @@ model Token {
 enum Role {
   USER
   MECHANIC
-  TECHNIC1
-  TECHNIC2
+  TECHNIC
   ADMIN
+  MANAGEMENT
+}
+
+enum OfficeRank {
+  TENIENTE_CORONEL
+  SARGENTO_PRIMERO
+  SARGENTO_SEGUNDO
+  CABO_PRIMERO
+  CABO_SEGUNDO
+  TENIENTE
+  MAYOR
+  CAPITAN
+  POLICIA
+  SUBTENIENTE
 }
 
 enum VehicleType {
-  BIKE
+  MOTORBIKE
+  SEDAN
+  SUV
 }
 
 enum TokenType {

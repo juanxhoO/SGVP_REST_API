@@ -1,4 +1,4 @@
-import { Vehicle, Role, Prisma } from '@prisma/client';
+import { Circuit, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
@@ -6,21 +6,20 @@ import ApiError from '../utils/ApiError';
 /**
  * Create a user
  * @param {Object} userBody
- * @returns {Promise<Vehicle>}
+ * @returns {Promise<Circuit>}
  */
-const createVehicle = async (
+const createCircuit = async (
     email: string,
     password: string,
-    role: Role = Role.USER,
     name?: string
 
-): Promise<Vehicle> => {
+): Promise<Circuit> => {
     // if (await getUserByEmail(email)) {
     //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
     // }
     return prisma.vehicle.create({
         data: {
-         name   ,
+            name,
         }
     });
 };
@@ -34,7 +33,7 @@ const createVehicle = async (
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryVehicles = async <Key extends keyof Vehicle>(
+const queryCircuit = async <Key extends keyof Circuit>(
     filter: object,
     options: {
         limit?: number;
@@ -52,7 +51,7 @@ const queryVehicles = async <Key extends keyof Vehicle>(
         'createdAt',
         'updatedAt'
     ] as Key[]
-): Promise<Pick<Vehicle, Key>[]> => {
+): Promise<Pick<Circuit, Key>[]> => {
     const page = options.page ?? 1;
     const limit = options.limit ?? 10;
     const sortBy = options.sortBy;
@@ -64,7 +63,7 @@ const queryVehicles = async <Key extends keyof Vehicle>(
         take: limit,
         orderBy: sortBy ? { [sortBy]: sortType } : undefined
     });
-    return users as Pick<Vehicle, Key>[];
+    return users as Pick<Circuit, Key>[];
 };
 
 /**
@@ -73,7 +72,7 @@ const queryVehicles = async <Key extends keyof Vehicle>(
  * @param {Array<Key>} keys
  * @returns {Promise<Pick<User, Key> | null>}
  */
-const getVehicleById = async <Key extends keyof Vehicle>(
+const getCircuitById = async <Key extends keyof Circuit>(
     id: number,
     keys: Key[] = [
         'id',
@@ -85,11 +84,11 @@ const getVehicleById = async <Key extends keyof Vehicle>(
         'createdAt',
         'updatedAt'
     ] as Key[]
-): Promise<Pick<Vehicle, Key> | null> => {
+): Promise<Pick<Circuit, Key> | null> => {
     return prisma.user.findUnique({
         where: { id },
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-    }) as Promise<Pick<Vehicle, Key> | null>;
+    }) as Promise<Pick<Circuit, Key> | null>;
 };
 
 
@@ -99,12 +98,12 @@ const getVehicleById = async <Key extends keyof Vehicle>(
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateVehicleById = async <Key extends keyof Vehicle>(
+const updateCircuitById = async <Key extends keyof Circuit>(
     userId: number,
     updateBody: Prisma.UserUpdateInput,
     keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
-): Promise<Pick<Vehicle, Key> | null> => {
-    const user = await getVehicleById(userId, ['id', 'email', 'name']);
+): Promise<Pick<Circuit, Key> | null> => {
+    const user = await getCircuitById(userId, ['id', 'email', 'name']);
     if (!user) {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
@@ -112,12 +111,12 @@ const updateVehicleById = async <Key extends keyof Vehicle>(
     //   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
     //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
     //   }
-    const updatedUser = await prisma.user.update({
+    const updatedCircuit = await prisma.circuit.update({
         where: { id: user.id },
         data: updateBody,
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
     });
-    return updatedUser as Pick<User, Key> | null;
+    return updatedCircuit as Pick<Circuit, Key> | null;
 };
 
 /**
@@ -125,8 +124,8 @@ const updateVehicleById = async <Key extends keyof Vehicle>(
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteVehicleById = async (userId: number): Promise<User> => {
-    const user = await deleteVehicleById(userId);
+const deleteCircuitById = async (userId: number): Promise<Circuit> => {
+    const user = await getCircuitById(userId);
     if (!user) {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
@@ -135,9 +134,9 @@ const deleteVehicleById = async (userId: number): Promise<User> => {
 };
 
 export default {
-    createVehicle,
-    queryVehicles,
-    getVehicleById,
-    updateVehicleById,
-    deleteVehicleById
+    createCircuit,
+    queryCircuit,
+    getCircuitById,
+    updateCircuitById,
+    deleteCircuitById
 };

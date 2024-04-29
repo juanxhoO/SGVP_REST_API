@@ -1,4 +1,4 @@
-import { Vehicle, Role, Prisma } from '@prisma/client';
+import { Maintenance, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
@@ -8,13 +8,10 @@ import ApiError from '../utils/ApiError';
  * @param {Object} userBody
  * @returns {Promise<Vehicle>}
  */
-const createVehicle = async (
-    email: string,
-    password: string,
-    role: Role = Role.USER,
+const createMaintenance = async (
     name?: string
 
-): Promise<Vehicle> => {
+): Promise<Maintenance> => {
     // if (await getUserByEmail(email)) {
     //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
     // }
@@ -34,7 +31,7 @@ const createVehicle = async (
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryVehicles = async <Key extends keyof Vehicle>(
+const queryMaintenances = async <Key extends keyof Maintenance>(
     filter: object,
     options: {
         limit?: number;
@@ -52,7 +49,7 @@ const queryVehicles = async <Key extends keyof Vehicle>(
         'createdAt',
         'updatedAt'
     ] as Key[]
-): Promise<Pick<Vehicle, Key>[]> => {
+): Promise<Pick<Maintenance, Key>[]> => {
     const page = options.page ?? 1;
     const limit = options.limit ?? 10;
     const sortBy = options.sortBy;
@@ -64,7 +61,7 @@ const queryVehicles = async <Key extends keyof Vehicle>(
         take: limit,
         orderBy: sortBy ? { [sortBy]: sortType } : undefined
     });
-    return users as Pick<Vehicle, Key>[];
+    return users as Pick<Maintenance, Key>[];
 };
 
 /**
@@ -73,7 +70,7 @@ const queryVehicles = async <Key extends keyof Vehicle>(
  * @param {Array<Key>} keys
  * @returns {Promise<Pick<User, Key> | null>}
  */
-const getVehicleById = async <Key extends keyof Vehicle>(
+const getMaintenanceById = async <Key extends keyof Maintenance>(
     id: number,
     keys: Key[] = [
         'id',
@@ -85,11 +82,11 @@ const getVehicleById = async <Key extends keyof Vehicle>(
         'createdAt',
         'updatedAt'
     ] as Key[]
-): Promise<Pick<Vehicle, Key> | null> => {
+): Promise<Pick<Maintenance, Key> | null> => {
     return prisma.user.findUnique({
         where: { id },
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-    }) as Promise<Pick<Vehicle, Key> | null>;
+    }) as Promise<Pick<Maintenance, Key> | null>;
 };
 
 
@@ -99,12 +96,12 @@ const getVehicleById = async <Key extends keyof Vehicle>(
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateVehicleById = async <Key extends keyof Vehicle>(
+const updateMaintenanceById = async <Key extends keyof Maintenance>(
     userId: number,
     updateBody: Prisma.UserUpdateInput,
     keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
-): Promise<Pick<Vehicle, Key> | null> => {
-    const user = await getVehicleById(userId, ['id', 'email', 'name']);
+): Promise<Pick<Maintenance, Key> | null> => {
+    const user = await getMaintenanceById(userId, ['id', 'email', 'name']);
     if (!user) {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
@@ -117,7 +114,7 @@ const updateVehicleById = async <Key extends keyof Vehicle>(
         data: updateBody,
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
     });
-    return updatedUser as Pick<User, Key> | null;
+    return updatedUser as Pick<Maintenance, Key> | null;
 };
 
 /**
@@ -125,7 +122,7 @@ const updateVehicleById = async <Key extends keyof Vehicle>(
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteVehicleById = async (userId: number): Promise<User> => {
+const deleteVehicleById = async (userId: number): Promise<Maintenance> => {
     const user = await deleteVehicleById(userId);
     if (!user) {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -135,9 +132,9 @@ const deleteVehicleById = async (userId: number): Promise<User> => {
 };
 
 export default {
-    createVehicle,
-    queryVehicles,
-    getVehicleById,
-    updateVehicleById,
+    createMaintenance,
+    queryMaintenances,
+    getMaintenanceById,
+    updateMaintenanceById,
     deleteVehicleById
 };
