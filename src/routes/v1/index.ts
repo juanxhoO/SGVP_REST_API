@@ -1,6 +1,7 @@
 import express from 'express';
 import authRoute from './auth.route';
 import userRoute from './user.route';
+import vehicleRoute from './vehicle.route';
 import docsRoute from './docs.route';
 import config from '../../config/config';
 
@@ -14,6 +15,14 @@ const defaultRoutes = [
   {
     path: '/users',
     route: userRoute
+  },
+  {
+    path: '/vehicles',
+    route: vehicleRoute
+  },
+  {
+    path: '/spares',
+    route: vehicleRoute
   }
 ];
 

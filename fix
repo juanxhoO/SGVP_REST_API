@@ -1,0 +1,6 @@
+
+> prisma-express-typescript-boilerplate@1.0.0 prettier
+> prettier --check **/*.ts
+
+Checking formatting...
+All matched files use Prettier code style!

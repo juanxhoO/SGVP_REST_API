@@ -30,21 +30,22 @@ model User {
 }
 
 model Vehicle {
-  id              Int           @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   name            String
-  images          String
+  images          String?
   chasis          String
   model           String
   brand           String
   plate           String
-  engine_cc       Int
-  engine          String
-  carringcapacity Int
-  passengers      Int
+  engine_cc       Int?
+  engine          String?
+  carringcapacity Int?
+  passengers      Int?
   mileage         Int
-  vehicletype     VehicleType[]
-  user            User          @relation(fields: [userId], references: [id])
+  user            User?    @relation(fields: [userId], references: [id])
   userId          Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Report {
@@ -56,14 +57,18 @@ model Report {
   userId    Int
   date      DateTime
   createdAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
-model Mecanica {
-  id      String @id @default(uuid())
-  name    String
-  email   String
-  address String
-  phone   String
+model Workshop {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  phone String
 }
 
 model Contract {
@@ -72,6 +77,7 @@ model Contract {
   mecanicId String
   type      String
   createdAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Circuit {
@@ -80,6 +86,7 @@ model Circuit {
   image     String
   code      String
   createdAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Distrit {
@@ -95,28 +102,33 @@ model City {
 }
 
 model Spare {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
-  image     String
+  image     String?
   sku       String
   stock     Int
   price     Float
   condition String
-  brand     String
-  model     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  brand String
+  model String
 }
 
 model Notification {
   id   String @id @default(uuid())
   name String
   type String
+  createdAt DateTime @updatedAt
 }
 
 model Maintenance {
-  id      String @id @default(uuid())
-  name    String
-  price   Float
-  details String
+  id        String   @id @default(uuid())
+  name      String
+  price     Float
+  details   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Order {
@@ -125,6 +137,7 @@ model Order {
   mecanicId Int
   userId    Int
   name      String
+  updatedAt DateTime @updatedAt
 }
 
 model File {

@@ -2,43 +2,43 @@ import httpStatus from 'http-status';
 import pick from '../utils/pick';
 import ApiError from '../utils/ApiError';
 import catchAsync from '../utils/catchAsync';
-import { userService } from '../services';
+import { vehicleService } from '../services';
 
-const createUser = catchAsync(async (req, res) => {
-  const { email, password, name, role } = req.body;
-  const user = await userService.createUser(email, password, name, role);
-  res.status(httpStatus.CREATED).send(user);
+const createVehicle = catchAsync(async (req, res) => {
+  const { name, chasis, model, brand, plate, mileage } = req.body;
+  const vehicle = await vehicleService.createVehicle(name, chasis, model, brand, plate, mileage);
+  res.status(httpStatus.CREATED).send(vehicle);
 });
 
-const getUsers = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+const getVehicles = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['name']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await userService.queryUsers(filter, options);
+  const result = await vehicleService.queryVehicles(filter, options);
   res.send(result);
 });
 
-const getUser = catchAsync(async (req, res) => {
-  const user = await userService.getUserById(req.params.userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+const getVehicle = catchAsync(async (req, res) => {
+  const vehicle = await vehicleService.getVehicleById(req.params.vehicleId);
+  if (!vehicle) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Vehicle not found');
   }
-  res.send(user);
+  res.send(vehicle);
 });
 
-const updateUser = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.params.userId, req.body);
-  res.send(user);
+const updateVehicle = catchAsync(async (req, res) => {
+  const vehicle = await vehicleService.updateVehicleById(req.params.vehicleId, req.body);
+  res.send(vehicle);
 });
 
-const deleteUser = catchAsync(async (req, res) => {
-  await userService.deleteUserById(req.params.userId);
+const deleteVehicle = catchAsync(async (req, res) => {
+  await vehicleService.deleteVehicleById(req.params.vehicleId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 export default {
-  createUser,
-  getUsers,
-  getUser,
-  updateUser,
-  deleteUser
+  createVehicle,
+  getVehicles,
+  getVehicle,
+  updateVehicle,
+  deleteVehicle
 };

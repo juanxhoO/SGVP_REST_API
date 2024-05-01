@@ -1,32 +1,24 @@
 import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
-import { vehicleValidation } from '../../validations';
-import { vehicleController } from '../../controllers';
+import { spareValidation } from '../../validations';
+import { spareController } from '../../controllers';
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(validate(vehicleValidation.createVehicle), vehicleController.createVehicle)
-  .get(validate(vehicleValidation.getVehicles), vehicleController.getVehicles);
+  .post(validate(spareValidation.createSpare), spareController.createSpare)
+  .get(validate(spareValidation.getSpares), spareController.getSpares);
 
 // .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
 // .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
-  .route('/:vehicleId')
-  .get(validate(vehicleValidation.getVehicle), vehicleController.getVehicle)
-  .patch(
-    auth('manageVehicles'),
-    validate(vehicleValidation.updateVehicle),
-    vehicleController.updateVehicle
-  )
-  .delete(
-    auth('manageVehicles'),
-    validate(vehicleValidation.deleteVehicle),
-    vehicleController.deleteVehicle
-  );
+  .route('/:userId')
+  .get(auth('getUsers'), validate(spareValidation.getSpare), spareController.getSpare)
+  .patch(auth('manageUsers'), validate(spareValidation.updateSpare), spareController.updateSpare)
+  .delete(auth('manageUsers'), validate(spareValidation.deleteSpare), spareController.deleteSpare);
 
 export default router;
 

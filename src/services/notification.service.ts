@@ -9,20 +9,19 @@ import ApiError from '../utils/ApiError';
  * @returns {Promise<Vehicle>}
  */
 const createVehicle = async (
-    email: string,
-    password: string,
-    role: Role = Role.USER,
-    name?: string
-
+  email: string,
+  password: string,
+  role: Role = Role.USER,
+  name?: string
 ): Promise<Vehicle> => {
-    // if (await getUserByEmail(email)) {
-    //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-    // }
-    return prisma.vehicle.create({
-        data: {
-         name   ,
-        }
-    });
+  // if (await getUserByEmail(email)) {
+  //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  // }
+  return prisma.vehicle.create({
+    data: {
+      name
+    }
+  });
 };
 
 /**
@@ -35,36 +34,36 @@ const createVehicle = async (
  * @returns {Promise<QueryResult>}
  */
 const queryVehicles = async <Key extends keyof Vehicle>(
-    filter: object,
-    options: {
-        limit?: number;
-        page?: number;
-        sortBy?: string;
-        sortType?: 'asc' | 'desc';
-    },
-    keys: Key[] = [
-        'id',
-        'email',
-        'name',
-        'password',
-        'role',
-        'isEmailVerified',
-        'createdAt',
-        'updatedAt'
-    ] as Key[]
+  filter: object,
+  options: {
+    limit?: number;
+    page?: number;
+    sortBy?: string;
+    sortType?: 'asc' | 'desc';
+  },
+  keys: Key[] = [
+    'id',
+    'email',
+    'name',
+    'password',
+    'role',
+    'isEmailVerified',
+    'createdAt',
+    'updatedAt'
+  ] as Key[]
 ): Promise<Pick<Vehicle, Key>[]> => {
-    const page = options.page ?? 1;
-    const limit = options.limit ?? 10;
-    const sortBy = options.sortBy;
-    const sortType = options.sortType ?? 'desc';
-    const users = await prisma.user.findMany({
-        where: filter,
-        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-        skip: page * limit,
-        take: limit,
-        orderBy: sortBy ? { [sortBy]: sortType } : undefined
-    });
-    return users as Pick<Vehicle, Key>[];
+  const page = options.page ?? 1;
+  const limit = options.limit ?? 10;
+  const sortBy = options.sortBy;
+  const sortType = options.sortType ?? 'desc';
+  const users = await prisma.user.findMany({
+    where: filter,
+    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
+    skip: page * limit,
+    take: limit,
+    orderBy: sortBy ? { [sortBy]: sortType } : undefined
+  });
+  return users as Pick<Vehicle, Key>[];
 };
 
 /**
@@ -74,24 +73,23 @@ const queryVehicles = async <Key extends keyof Vehicle>(
  * @returns {Promise<Pick<User, Key> | null>}
  */
 const getVehicleById = async <Key extends keyof Vehicle>(
-    id: number,
-    keys: Key[] = [
-        'id',
-        'email',
-        'name',
-        'password',
-        'role',
-        'isEmailVerified',
-        'createdAt',
-        'updatedAt'
-    ] as Key[]
+  id: number,
+  keys: Key[] = [
+    'id',
+    'email',
+    'name',
+    'password',
+    'role',
+    'isEmailVerified',
+    'createdAt',
+    'updatedAt'
+  ] as Key[]
 ): Promise<Pick<Vehicle, Key> | null> => {
-    return prisma.user.findUnique({
-        where: { id },
-        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-    }) as Promise<Pick<Vehicle, Key> | null>;
+  return prisma.user.findUnique({
+    where: { id },
+    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
+  }) as Promise<Pick<Vehicle, Key> | null>;
 };
-
 
 /**
  * Update user by id
@@ -100,24 +98,24 @@ const getVehicleById = async <Key extends keyof Vehicle>(
  * @returns {Promise<User>}
  */
 const updateVehicleById = async <Key extends keyof Vehicle>(
-    userId: number,
-    updateBody: Prisma.UserUpdateInput,
-    keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
+  userId: number,
+  updateBody: Prisma.UserUpdateInput,
+  keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
 ): Promise<Pick<Vehicle, Key> | null> => {
-    const user = await getVehicleById(userId, ['id', 'email', 'name']);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-    }
+  const user = await getVehicleById(userId, ['id', 'email', 'name']);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
 
-    //   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
-    //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-    //   }
-    const updatedUser = await prisma.user.update({
-        where: { id: user.id },
-        data: updateBody,
-        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-    });
-    return updatedUser as Pick<User, Key> | null;
+  //   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
+  //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  //   }
+  const updatedUser = await prisma.user.update({
+    where: { id: user.id },
+    data: updateBody,
+    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
+  });
+  return updatedUser as Pick<User, Key> | null;
 };
 
 /**
@@ -126,18 +124,18 @@ const updateVehicleById = async <Key extends keyof Vehicle>(
  * @returns {Promise<User>}
  */
 const deleteVehicleById = async (userId: number): Promise<User> => {
-    const user = await deleteVehicleById(userId);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-    }
-    await prisma.user.delete({ where: { id: user.id } });
-    return user;
+  const user = await deleteVehicleById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  await prisma.user.delete({ where: { id: user.id } });
+  return user;
 };
 
 export default {
-    createVehicle,
-    queryVehicles,
-    getVehicleById,
-    updateVehicleById,
-    deleteVehicleById
+  createVehicle,
+  queryVehicles,
+  getVehicleById,
+  updateVehicleById,
+  deleteVehicleById
 };

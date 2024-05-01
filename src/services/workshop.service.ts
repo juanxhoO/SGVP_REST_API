@@ -1,4 +1,4 @@
-import { Contract, Prisma } from '@prisma/client';
+import { Workshop, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
@@ -6,9 +6,9 @@ import ApiError from '../utils/ApiError';
 /**
  * Create a user
  * @param {Object} userBody
- * @returns {Promise<Contract>}
+ * @returns {Promise<Workshop>}
  */
-const createVehicle = async (name?: string): Promise<Contract> => {
+const createVehicle = async (email: string, name?: string): Promise<Workshop> => {
   // if (await getUserByEmail(email)) {
   //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   // }
@@ -28,7 +28,7 @@ const createVehicle = async (name?: string): Promise<Contract> => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryVehicles = async <Key extends keyof Contract>(
+const queryVehicles = async <Key extends keyof Vehicle>(
   filter: object,
   options: {
     limit?: number;
@@ -46,7 +46,7 @@ const queryVehicles = async <Key extends keyof Contract>(
     'createdAt',
     'updatedAt'
   ] as Key[]
-): Promise<Pick<Contract, Key>[]> => {
+): Promise<Pick<Vehicle, Key>[]> => {
   const page = options.page ?? 1;
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
@@ -58,7 +58,7 @@ const queryVehicles = async <Key extends keyof Contract>(
     take: limit,
     orderBy: sortBy ? { [sortBy]: sortType } : undefined
   });
-  return users as Pick<Contract, Key>[];
+  return users as Pick<Vehicle, Key>[];
 };
 
 /**
@@ -67,7 +67,7 @@ const queryVehicles = async <Key extends keyof Contract>(
  * @param {Array<Key>} keys
  * @returns {Promise<Pick<User, Key> | null>}
  */
-const getVehicleById = async <Key extends keyof Contract>(
+const getVehicleById = async <Key extends keyof Vehicle>(
   id: number,
   keys: Key[] = [
     'id',
@@ -79,11 +79,11 @@ const getVehicleById = async <Key extends keyof Contract>(
     'createdAt',
     'updatedAt'
   ] as Key[]
-): Promise<Pick<Contract, Key> | null> => {
+): Promise<Pick<Vehicle, Key> | null> => {
   return prisma.user.findUnique({
     where: { id },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-  }) as Promise<Pick<Contract, Key> | null>;
+  }) as Promise<Pick<Vehicle, Key> | null>;
 };
 
 /**
@@ -92,11 +92,11 @@ const getVehicleById = async <Key extends keyof Contract>(
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateVehicleById = async <Key extends keyof Contract>(
+const updateVehicleById = async <Key extends keyof Vehicle>(
   userId: number,
   updateBody: Prisma.UserUpdateInput,
   keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
-): Promise<Pick<Contract, Key> | null> => {
+): Promise<Pick<Vehicle, Key> | null> => {
   const user = await getVehicleById(userId, ['id', 'email', 'name']);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -110,15 +110,15 @@ const updateVehicleById = async <Key extends keyof Contract>(
     data: updateBody,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   });
-  return updatedUser as Pick<Contract, Key> | null;
+  return updatedUser as Pick<User, Key> | null;
 };
 
 /**
  * Delete user by id
  * @param {ObjectId} userId
- * @returns {Promise<Contract>}
+ * @returns {Promise<User>}
  */
-const deleteVehicleById = async (userId: number): Promise<Contract> => {
+const deleteVehicleById = async (userId: number): Promise<User> => {
   const user = await deleteVehicleById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');

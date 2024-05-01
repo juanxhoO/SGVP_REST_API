@@ -1,143 +1,255 @@
-import { Vehicle, Role, Prisma } from '@prisma/client';
-import httpStatus from 'http-status';
-import prisma from '../client';
-import ApiError from '../utils/ApiError';
+import express from 'express';
+import auth from '../../middlewares/auth';
+import validate from '../../middlewares/validate';
+import { contractValidation } from '../../validations';
+import { contractController } from '../../controllers';
+
+const router = express.Router();
+
+router
+  .route('/')
+  .post(validate(contractValidation.createUser), contractController.createUser)
+  .get(validate(contractValidation.getUsers), contractController.getUsers);
+
+// .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
+// .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
+
+router
+  .route('/:userId')
+  .get(auth('getUsers'), validate(contractValidation.getUser), contractController.getUser)
+  // .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
+  .delete(auth('manageUsers'), validate(contractValidation.deleteUser), contractController.deleteUser);
+
+export default router;
 
 /**
- * Create a user
- * @param {Object} userBody
- * @returns {Promise<Vehicle>}
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management and retrieval
  */
-const createVehicle = async (
-    email: string,
-    password: string,
-    role: Role = Role.USER,
-    name?: string
-
-): Promise<Vehicle> => {
-    // if (await getUserByEmail(email)) {
-    //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-    // }
-    return prisma.vehicle.create({
-        data: {
-         name   ,
-        }
-    });
-};
 
 /**
- * Query for users
- * @param {Object} filter - Mongo filter
- * @param {Object} options - Query options
- * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
- * @param {number} [options.limit] - Maximum number of results per page (default = 10)
- * @param {number} [options.page] - Current page (default = 1)
- * @returns {Promise<QueryResult>}
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Create a user
+ *     description: Only admins can create other users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - role
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: must be unique
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 8
+ *                 description: At least one number and one letter
+ *               role:
+ *                  type: string
+ *                  enum: [user, admin]
+ *             example:
+ *               name: fake name
+ *               email: fake@example.com
+ *               password: password1
+ *               role: user
+ *     responses:
+ *       "201":
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicateEmail'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *
+ *   get:
+ *     summary: Get all users
+ *     description: Only admins can retrieve all users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: User name
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *         description: User role
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *         description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         default: 10
+ *         description: Maximum number of users
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 results:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 1
+ *                 totalResults:
+ *                   type: integer
+ *                   example: 1
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
  */
-const queryVehicles = async <Key extends keyof Vehicle>(
-    filter: object,
-    options: {
-        limit?: number;
-        page?: number;
-        sortBy?: string;
-        sortType?: 'asc' | 'desc';
-    },
-    keys: Key[] = [
-        'id',
-        'email',
-        'name',
-        'password',
-        'role',
-        'isEmailVerified',
-        'createdAt',
-        'updatedAt'
-    ] as Key[]
-): Promise<Pick<Vehicle, Key>[]> => {
-    const page = options.page ?? 1;
-    const limit = options.limit ?? 10;
-    const sortBy = options.sortBy;
-    const sortType = options.sortType ?? 'desc';
-    const users = await prisma.user.findMany({
-        where: filter,
-        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-        skip: page * limit,
-        take: limit,
-        orderBy: sortBy ? { [sortBy]: sortType } : undefined
-    });
-    return users as Pick<Vehicle, Key>[];
-};
 
 /**
- * Get user by id
- * @param {ObjectId} id
- * @param {Array<Key>} keys
- * @returns {Promise<Pick<User, Key> | null>}
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get a user
+ *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   patch:
+ *     summary: Update a user
+ *     description: Logged in users can only update their own information. Only admins can update other users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: must be unique
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 8
+ *                 description: At least one number and one letter
+ *             example:
+ *               name: fake name
+ *               email: fake@example.com
+ *               password: password1
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicateEmail'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   delete:
+ *     summary: Delete a user
+ *     description: Logged in users can delete only themselves. Only admins can delete other users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User id
+ *     responses:
+ *       "200":
+ *         description: No content
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
  */
-const getVehicleById = async <Key extends keyof Vehicle>(
-    id: number,
-    keys: Key[] = [
-        'id',
-        'email',
-        'name',
-        'password',
-        'role',
-        'isEmailVerified',
-        'createdAt',
-        'updatedAt'
-    ] as Key[]
-): Promise<Pick<Vehicle, Key> | null> => {
-    return prisma.user.findUnique({
-        where: { id },
-        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-    }) as Promise<Pick<Vehicle, Key> | null>;
-};
-
-
-/**
- * Update user by id
- * @param {ObjectId} userId
- * @param {Object} updateBody
- * @returns {Promise<User>}
- */
-const updateVehicleById = async <Key extends keyof Vehicle>(
-    userId: number,
-    updateBody: Prisma.UserUpdateInput,
-    keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
-): Promise<Pick<Vehicle, Key> | null> => {
-    const user = await getVehicleById(userId, ['id', 'email', 'name']);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-    }
-
-    //   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
-    //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-    //   }
-    const updatedUser = await prisma.user.update({
-        where: { id: user.id },
-        data: updateBody,
-        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-    });
-    return updatedUser as Pick<User, Key> | null;
-};
-
-/**
- * Delete user by id
- * @param {ObjectId} userId
- * @returns {Promise<User>}
- */
-const deleteVehicleById = async (userId: number): Promise<User> => {
-    const user = await deleteVehicleById(userId);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-    }
-    await prisma.user.delete({ where: { id: user.id } });
-    return user;
-};
-
-export default {
-    createVehicle,
-    queryVehicles,
-    getVehicleById,
-    updateVehicleById,
-    deleteVehicleById
-};

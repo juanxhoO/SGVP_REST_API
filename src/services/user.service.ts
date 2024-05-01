@@ -16,7 +16,6 @@ const createUser = async (
   name?: string
 ): Promise<User> => {
   if (await getUserByEmail(email)) {
-    getUserByEmail(email)
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
   return prisma.user.create({
@@ -50,7 +49,6 @@ const queryUsers = async <Key extends keyof User>(
     'id',
     'email',
     'name',
-    'password',
     'role',
     'isEmailVerified',
     'createdAt',
@@ -104,13 +102,7 @@ const getUserById = async <Key extends keyof User>(
  */
 const getUserByEmail = async <Key extends keyof User>(
   email: string,
-  keys: Key[] = [
-    'id',
-    'email',
-    'isEmailVerified',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'email', 'isEmailVerified', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<User, Key> | null> => {
   return prisma.user.findUnique({
     where: { email },
