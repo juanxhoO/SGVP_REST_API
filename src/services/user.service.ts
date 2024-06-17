@@ -55,7 +55,7 @@ const queryUsers = async <Key extends keyof User>(
     'updatedAt'
   ] as Key[]
 ): Promise<Pick<User, Key>[]> => {
-  const page = options.page ?? 1;
+  const page = options.page ?? 0;
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
@@ -76,12 +76,11 @@ const queryUsers = async <Key extends keyof User>(
  * @returns {Promise<Pick<User, Key> | null>}
  */
 const getUserById = async <Key extends keyof User>(
-  id: number,
+  id: string,
   keys: Key[] = [
     'id',
     'email',
     'name',
-    'password',
     'role',
     'isEmailVerified',
     'createdAt',
@@ -117,11 +116,11 @@ const getUserByEmail = async <Key extends keyof User>(
  * @returns {Promise<User>}
  */
 const updateUserById = async <Key extends keyof User>(
-  userId: number,
+  userId: string,
   updateBody: Prisma.UserUpdateInput,
-  keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
+  keys: Key[] = ['id', 'email', 'name', 'role','lastname','phone','id_card','bloodType'] as Key[]
 ): Promise<Pick<User, Key> | null> => {
-  const user = await getUserById(userId, ['id', 'email', 'name']);
+  const user = await getUserById(userId, ['id', 'email']);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -141,7 +140,7 @@ const updateUserById = async <Key extends keyof User>(
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteUserById = async (userId: number): Promise<User> => {
+const deleteUserById = async (userId: string): Promise<User> => {
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');

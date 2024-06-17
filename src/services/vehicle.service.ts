@@ -14,7 +14,12 @@ const createVehicle = async (
   model: string,
   brand: string,
   plate: string,
-  mileage: number
+  mileage: number,
+  images?: string,
+  engine_cc?: number,
+  engine?: string,
+  carringcapacity?: number,
+  passengers?: number,
 ): Promise<Vehicle> => {
   return prisma.vehicle.create({
     data: {
@@ -23,7 +28,12 @@ const createVehicle = async (
       model,
       brand,
       plate,
-      mileage
+      mileage,
+      images,
+      engine_cc,
+      engine,
+      carringcapacity,
+      passengers
     }
   });
 };
@@ -68,7 +78,7 @@ const queryVehicles = async <Key extends keyof Vehicle>(
  * @returns {Promise<Pick<Vehicle, Key> | null>}
  */
 const getVehicleById = async <Key extends keyof Vehicle>(
-  id: number,
+  id: string,
   keys: Key[] = ['id', 'name', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Vehicle, Key> | null> => {
   return prisma.vehicle.findUnique({
@@ -79,25 +89,25 @@ const getVehicleById = async <Key extends keyof Vehicle>(
 
 /**
  * Update user by id
- * @param {ObjectId} userId
+ * @param {ObjectId} vehicleId
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
 const updateVehicleById = async <Key extends keyof Vehicle>(
-  userId: number,
-  updateBody: Prisma.UserUpdateInput,
-  keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
+  vehicleId: string,
+  updateBody: Prisma.VehicleUpdateInput,
+  keys: Key[] = ['id', 'name'] as Key[]
 ): Promise<Pick<Vehicle, Key> | null> => {
-  const user = await getVehicleById(userId, ['id', 'name']);
-  if (!user) {
+  const vehicle = await getVehicleById(vehicleId, ['id', 'name']);
+  if (!vehicle) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   //   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
   //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   //   }
-  const updatedUser = await prisma.user.update({
-    where: { id: user.id },
+  const updatedUser = await prisma.vehicle.update({
+    where: { id: vehicle.id },
     data: updateBody,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   });
@@ -106,16 +116,16 @@ const updateVehicleById = async <Key extends keyof Vehicle>(
 
 /**
  * Delete user by id
- * @param {ObjectId} userId
- * @returns {Promise<User>}
+ * @param {ObjectId} vehicleId
+ * @returns {Promise<Vehicle>}
  */
-const deleteVehicleById = async (userId: number): Promise<Vehicle> => {
-  const user = await deleteVehicleById(userId);
-  if (!user) {
+const deleteVehicleById = async (vehicleId: string): Promise<Vehicle> => {
+  const vehicle = await getVehicleById(vehicleId);
+  if (!vehicle) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  await prisma.user.delete({ where: { id: user.id } });
-  return user;
+  await prisma.vehicle.delete({ where: { id: vehicle.id } });
+  return vehicle;
 };
 
 export default {

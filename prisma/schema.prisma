@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id              Int       @id @default(autoincrement())
+  id              String   @id @default(uuid())
   email           String    @unique
   name            String?
   lastname        String?
@@ -30,7 +30,7 @@ model User {
 }
 
 model Vehicle {
-  id              Int      @id @default(autoincrement())
+  id              String   @id @default(uuid())
   name            String
   images          String?
   chasis          String
@@ -43,10 +43,11 @@ model Vehicle {
   passengers      Int?
   mileage         Int
   user            User?    @relation(fields: [userId], references: [id])
-  userId          Int
+  userId          String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
+
 
 model Report {
   id        String   @id @default(uuid())
@@ -156,7 +157,7 @@ model Token {
   blacklisted Boolean
   createdAt   DateTime  @default(now())
   user        User      @relation(fields: [userId], references: [id])
-  userId      Int
+  userId      String    @unique
 }
 
 enum Role {

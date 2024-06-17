@@ -29,20 +29,23 @@ const getUser = {
 
 const updateUser = {
   params: Joi.object().keys({
-    userId: Joi.number().integer()
-  }),
+    userId: Joi.string()
+    }),
   body: Joi.object()
     .keys({
       email: Joi.string().email(),
       password: Joi.string().custom(password),
-      name: Joi.string()
+      lastname:Joi.string(),
+      phone: Joi.string(),
+      name: Joi.string(),
+      id_card: Joi.string()
     })
     .min(1)
 };
 
 const deleteUser = {
   params: Joi.object().keys({
-    userId: Joi.number().integer()
+    userId: Joi.string()
   })
 };
 

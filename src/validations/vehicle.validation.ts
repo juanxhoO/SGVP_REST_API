@@ -1,10 +1,17 @@
-import { Role } from '@prisma/client';
 import Joi from 'joi';
 
 const createVehicle = {
   body: Joi.object().keys({
-    name: Joi.string().required(),
-    role: Joi.string().required().valid(Role.USER, Role.ADMIN)
+    name: Joi.string(),
+    chasis: Joi.string(),
+    brand: Joi.string(),
+    model: Joi.string(),
+    plate: Joi.string(),
+    engine_cc: Joi.number().integer,
+    engine: Joi.string(),
+    carringcapacity: Joi.number().integer,
+    passengers: Joi.number().integer,
+    mileage: Joi.number(),
   })
 };
 
@@ -19,13 +26,13 @@ const getVehicles = {
 
 const getVehicle = {
   params: Joi.object().keys({
-    vehicleId: Joi.number().integer()
+    vehicleId: Joi.string()
   })
 };
 
 const updateVehicle = {
   params: Joi.object().keys({
-    userId: Joi.number().integer()
+    vehicleId: Joi.string()
   }),
   body: Joi.object()
     .keys({
@@ -37,7 +44,7 @@ const updateVehicle = {
 
 const deleteVehicle = {
   params: Joi.object().keys({
-    userId: Joi.number().integer()
+    vehicleId: Joi.string()
   })
 };
 

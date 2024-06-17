@@ -6,6 +6,9 @@ import { vehicleController } from '../../controllers';
 
 const router = express.Router();
 
+
+
+
 router
   .route('/')
   .post(validate(vehicleValidation.createVehicle), vehicleController.createVehicle)
@@ -18,12 +21,10 @@ router
   .route('/:vehicleId')
   .get(validate(vehicleValidation.getVehicle), vehicleController.getVehicle)
   .patch(
-    auth('manageVehicles'),
     validate(vehicleValidation.updateVehicle),
     vehicleController.updateVehicle
   )
   .delete(
-    auth('manageVehicles'),
     validate(vehicleValidation.deleteVehicle),
     vehicleController.deleteVehicle
   );
