@@ -1,20 +1,24 @@
-import { Order, Prisma } from '@prisma/client';
+import { Order, User, Vehicle, Prisma, OrderStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
 
 /**
  * Create a user
- * @param {Object} userBody
- * @returns {Promise<Vehicle>}
+ * @param {string} userId - The ID of the user.
+ * @param {string} vehicleId - The ID of the vehicle.
+ * @param {string} observations - Additional observations for the order.
+ * @param {string} status - The status of the order.
+ * @returns {Promise<Order>}
  */
-const createOrder = async (email: string, name?: string): Promise<Order> => {
-  // if (await getUserByEmail(email)) {
-  //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-  // }
+
+const createOrder = async (userId: string, vehicleId: string, observations: string, status: OrderStatus): Promise<Order> => {
   return prisma.order.create({
     data: {
-      name
+      userId,
+      vehicleId,
+      observations,
+      status
     }
   });
 };
@@ -38,11 +42,6 @@ const queryOrders = async <Key extends keyof Order>(
   },
   keys: Key[] = [
     'id',
-    'email',
-    'name',
-    'password',
-    'role',
-    'isEmailVerified',
     'createdAt',
     'updatedAt'
   ] as Key[]

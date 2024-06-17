@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(uuid())
+  id              String    @id @default(uuid())
   email           String    @unique
   name            String?
   lastname        String?
@@ -27,6 +27,7 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   Token           Token[]
+  orders          Order[]
 }
 
 model Vehicle {
@@ -46,8 +47,8 @@ model Vehicle {
   userId          String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  orders          Order[]
 }
-
 
 model Report {
   id        String   @id @default(uuid())
@@ -112,14 +113,14 @@ model Spare {
   condition String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  brand String
-  model String
+  brand     String
+  model     String
 }
 
 model Notification {
-  id   String @id @default(uuid())
-  name String
-  type String
+  id        String   @id @default(uuid())
+  name      String
+  type      String
   createdAt DateTime @updatedAt
 }
 
@@ -133,12 +134,16 @@ model Maintenance {
 }
 
 model Order {
-  id        String   @id @default(uuid())
-  createdAt DateTime
-  mecanicId Int
-  userId    Int
-  name      String
-  updatedAt DateTime @updatedAt
+  id           String      @id @default(uuid())
+  vehicleId    String
+  vehicle      Vehicle     @relation(fields: [vehicleId], references: [id])
+  mecanicId    Int?
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+  status       OrderStatus
+  observations String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model File {
@@ -185,6 +190,12 @@ enum VehicleType {
   MOTORBIKE
   SEDAN
   SUV
+}
+
+enum OrderStatus {
+  ACCEPTED
+  CANCELLED
+  PENDANT
 }
 
 enum TokenType {
