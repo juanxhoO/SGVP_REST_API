@@ -67,14 +67,9 @@ const queryOrders = async <Key extends keyof Order>(
  * @returns {Promise<Pick<User, Key> | null>}
  */
 const getOrderById = async <Key extends keyof Order>(
-  id: number,
+  id: string,
   keys: Key[] = [
     'id',
-    'email',
-    'name',
-    'password',
-    'role',
-    'isEmailVerified',
     'createdAt',
     'updatedAt'
   ] as Key[]
@@ -92,11 +87,11 @@ const getOrderById = async <Key extends keyof Order>(
  * @returns {Promise<User>}
  */
 const updateOrderById = async <Key extends keyof Order>(
-  userId: number,
+  userId: string,
   updateBody: Prisma.UserUpdateInput,
-  keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
+  keys: Key[] = ['id'] as Key[]
 ): Promise<Pick<Order, Key> | null> => {
-  const user = await getVehicleById(userId, ['id', 'email', 'name']);
+  const user = await getOrderById(userId, ['id']);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -117,7 +112,7 @@ const updateOrderById = async <Key extends keyof Order>(
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteOrderById = async (userId: number): Promise<Order> => {
+const deleteOrderById = async (userId: string): Promise<Order> => {
   const user = await getOrderById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
