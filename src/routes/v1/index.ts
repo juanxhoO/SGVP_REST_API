@@ -1,10 +1,11 @@
 import express from 'express';
 import authRoute from './auth.route';
 import userRoute from './user.route';
+import orderRoute from './order.route'
 import vehicleRoute from './vehicle.route';
 import docsRoute from './docs.route';
 import config from '../../config/config';
-
+import sparesRoute from './spare.route'
 const router = express.Router();
 
 const defaultRoutes = [
@@ -17,12 +18,16 @@ const defaultRoutes = [
     route: userRoute
   },
   {
+    path: '/orders',
+    route: orderRoute
+  },
+  {
     path: '/vehicles',
     route: vehicleRoute
   },
   {
     path: '/spares',
-    route: vehicleRoute
+    route: sparesRoute
   }
 ];
 

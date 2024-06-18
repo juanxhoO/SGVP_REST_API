@@ -6,8 +6,8 @@ import { spareService } from '../services';
 
 const createSpare = catchAsync(async (req, res) => {
   const { name, sku, stock, price, condition, brand, model } = req.body;
-  const user = await spareService.createSpare(name, sku, stock, price, condition, brand, model);
-  res.status(httpStatus.CREATED).send(user);
+  const spare = await spareService.createSpare(name, sku, stock, price, condition, brand, model);
+  res.status(httpStatus.CREATED).send(spare);
 });
 
 const getSpares = catchAsync(async (req, res) => {
@@ -18,20 +18,20 @@ const getSpares = catchAsync(async (req, res) => {
 });
 
 const getSpare = catchAsync(async (req, res) => {
-  const user = await spareService.getSpareById(req.params.userId);
+  const user = await spareService.getSpareById(req.params.spareId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Spare not found');
   }
   res.send(user);
 });
 
 const updateSpare = catchAsync(async (req, res) => {
-  const user = await spareService.updateSpareById(req.params.userId, req.body);
+  const user = await spareService.updateSpareById(req.params.spareId, req.body);
   res.send(user);
 });
 
 const deleteSpare = catchAsync(async (req, res) => {
-  await spareService.deleteSpareById(req.params.userId);
+  await spareService.deleteSpareById(req.params.spareId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

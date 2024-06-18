@@ -12,13 +12,13 @@ import ApiError from '../utils/ApiError';
  * @returns {Promise<Order>}
  */
 
-const createOrder = async (userId: string, vehicleId: string, observations: string, status: OrderStatus): Promise<Order> => {
+const createOrder = async (userId: string, vehicleId: string, status: OrderStatus, observations?: string ): Promise<Order> => {
   return prisma.order.create({
     data: {
       userId,
       vehicleId,
+      status,
       observations,
-      status
     }
   });
 };
@@ -46,11 +46,11 @@ const queryOrders = async <Key extends keyof Order>(
     'updatedAt'
   ] as Key[]
 ): Promise<Pick<Order, Key>[]> => {
-  const page = options.page ?? 1;
+  const page = options.page ?? 0;
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
-  const users = await prisma.user.findMany({
+  const users = await prisma.order.findMany({
     where: filter,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     skip: page * limit,
@@ -64,17 +64,21 @@ const queryOrders = async <Key extends keyof Order>(
  * Get user by id
  * @param {ObjectId} id
  * @param {Array<Key>} keys
- * @returns {Promise<Pick<User, Key> | null>}
+ * @returns {Promise<Pick<Order, Key> | null>}
  */
 const getOrderById = async <Key extends keyof Order>(
   id: string,
   keys: Key[] = [
     'id',
+    'userId',
+    'vehicleId',
+    'status',
+    'observations',
     'createdAt',
     'updatedAt'
   ] as Key[]
 ): Promise<Pick<Order, Key> | null> => {
-  return prisma.user.findUnique({
+  return prisma.order.findUnique({
     where: { id },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   }) as Promise<Pick<Order, Key> | null>;
@@ -109,13 +113,13 @@ const updateOrderById = async <Key extends keyof Order>(
 
 /**
  * Delete user by id
- * @param {ObjectId} userId
- * @returns {Promise<User>}
+ * @param {ObjectId} orderId
+ * @returns {Promise<Order>}
  */
-const deleteOrderById = async (userId: string): Promise<Order> => {
-  const user = await getOrderById(userId);
+const deleteOrderById = async (orderId: string): Promise<Order> => {
+  const user = await getOrderById(orderId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }
   await prisma.user.delete({ where: { id: user.id } });
   return user;

@@ -6,8 +6,8 @@ import { orderService } from '../services';
 
 const createOrder = catchAsync(async (req, res) => {
   const { userId,vehicleId,status,observations} = req.body;
-  const user = await orderService.createOrder(userId,vehicleId,status,observations);
-  res.status(httpStatus.CREATED).send(user);
+  const order = await orderService.createOrder(userId,vehicleId,status,observations);
+  res.status(httpStatus.CREATED).send(order);
 });
 
 const getOrders = catchAsync(async (req, res) => {
@@ -18,11 +18,12 @@ const getOrders = catchAsync(async (req, res) => {
 });
 
 const getOrder = catchAsync(async (req, res) => {
-  const user = await orderService.getOrderById(req.params.userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  const order = await orderService.getOrderById(req.params.orderId);
+  console.log(order)
+  if (!order) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }
-  res.send(user);
+  res.send(order);
 });
 
 const updateOrder = catchAsync(async (req, res) => {
@@ -31,7 +32,7 @@ const updateOrder = catchAsync(async (req, res) => {
 });
 
 const deleteOrder = catchAsync(async (req, res) => {
-  await orderService.deleteOrderById(req.params.userId);
+  await orderService.deleteOrderById(req.params.orderId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

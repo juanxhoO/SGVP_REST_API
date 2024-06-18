@@ -5,7 +5,7 @@ import ApiError from '../utils/ApiError';
 
 /**
  * Create a user
- * @param {Object} userBody
+ * @param {Object} spareBody
  * @returns {Promise<Spare>}
  */
 const createSpare = async (
@@ -49,20 +49,16 @@ const querySpares = async <Key extends keyof Spare>(
   },
   keys: Key[] = [
     'id',
-    'email',
-    'name',
-    'password',
-    'role',
-    'isEmailVerified',
+    'name', 'sku','stock','price','condition','brand','model',
     'createdAt',
     'updatedAt'
   ] as Key[]
 ): Promise<Pick<Spare, Key>[]> => {
-  const page = options.page ?? 1;
+  const page = options.page ?? 0;
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
-  const users = await prisma.user.findMany({
+  const users = await prisma.spare.findMany({
     where: filter,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     skip: page * limit,
@@ -80,7 +76,7 @@ const querySpares = async <Key extends keyof Spare>(
  */
 const getSpareById = async <Key extends keyof Spare>(
   id: string,
-  keys: Key[] = ['id', 'name', 'role', 'createdAt', 'updatedAt'] as Key[]
+  keys: Key[] = ['id', 'name','createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Spare, Key> | null> => {
   return prisma.spare.findUnique({
     where: { id },
@@ -97,7 +93,7 @@ const getSpareById = async <Key extends keyof Spare>(
 const updateSpareById = async <Key extends keyof Spare>(
   userId: string,
   updateBody: Prisma.SpareUpdateInput,
-  keys: Key[] = ['id', 'name', 'role'] as Key[]
+  keys: Key[] = ['id', 'name','sku','stock','price','condition','brand','model'] as Key[]
 ): Promise<Pick<Spare, Key> | null> => {
   const spare = await getSpareById(userId, ['id', 'name']);
   if (!spare) {
@@ -119,7 +115,7 @@ const updateSpareById = async <Key extends keyof Spare>(
 const deleteSpareById = async (spareId: string): Promise<Spare> => {
   const spare = await getSpareById(spareId);
   if (!spare) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Spare not found');
   }
   await prisma.spare.delete({ where: { id: spare.id } });
   return spare;

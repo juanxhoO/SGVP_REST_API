@@ -15,10 +15,10 @@ router
 // .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
-  .route('/:userId')
-  .get(auth('getUsers'), validate(spareValidation.getSpare), spareController.getSpare)
-  .patch(auth('manageUsers'), validate(spareValidation.updateSpare), spareController.updateSpare)
-  .delete(auth('manageUsers'), validate(spareValidation.deleteSpare), spareController.deleteSpare);
+  .route('/:spareId')
+  .get( validate(spareValidation.getSpare), spareController.getSpare)
+  .patch( validate(spareValidation.updateSpare), spareController.updateSpare)
+  .delete( validate(spareValidation.deleteSpare), spareController.deleteSpare);
 
 export default router;
 

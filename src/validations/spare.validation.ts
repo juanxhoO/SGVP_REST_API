@@ -1,10 +1,14 @@
-import { Role } from '@prisma/client';
 import Joi from 'joi';
 
 const createSpare = {
   body: Joi.object().keys({
-    name: Joi.string().required(),
-    role: Joi.string().required().valid(Role.USER, Role.ADMIN)
+    name: Joi.string(),
+    sku: Joi.string(),
+    stock:Joi.number(),
+    price:Joi.number(),
+    condition:Joi.string(),
+    brand:Joi.string(),
+    model:Joi.string()
   })
 };
 
@@ -19,7 +23,7 @@ const getSpares = {
 
 const getSpare = {
   params: Joi.object().keys({
-    vehicleId: Joi.number().integer()
+    spareId: Joi.string()
   })
 };
 
@@ -37,7 +41,7 @@ const updateSpare = {
 
 const deleteSpare = {
   params: Joi.object().keys({
-    userId: Joi.number().integer()
+    spareId: Joi.string()
   })
 };
 
