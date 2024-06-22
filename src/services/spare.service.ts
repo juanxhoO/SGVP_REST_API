@@ -76,7 +76,7 @@ const querySpares = async <Key extends keyof Spare>(
  */
 const getSpareById = async <Key extends keyof Spare>(
   id: string,
-  keys: Key[] = ['id', 'name','createdAt', 'updatedAt'] as Key[]
+  keys: Key[] = ['id', 'name','sku','stock','price','condition','brand','model','createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Spare, Key> | null> => {
   return prisma.spare.findUnique({
     where: { id },

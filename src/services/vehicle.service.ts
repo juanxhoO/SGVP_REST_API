@@ -14,6 +14,7 @@ const createVehicle = async (
   model: string,
   brand: string,
   plate: string,
+  type: string,
   mileage: number,
   images?: string,
   engine_cc?: number,
@@ -28,6 +29,7 @@ const createVehicle = async (
       model,
       brand,
       plate,
+      type,
       mileage,
       images,
       engine_cc,
@@ -79,7 +81,7 @@ const queryVehicles = async <Key extends keyof Vehicle>(
  */
 const getVehicleById = async <Key extends keyof Vehicle>(
   id: string,
-  keys: Key[] = ['id', 'name', 'createdAt', 'updatedAt'] as Key[]
+  keys: Key[] = ['id', 'name', 'images', 'chasis', 'model', 'brand', 'plate',  'engine_cc', 'engine', 'type', 'carringcapacity','passengers', 'mileage', 'createdAt', 'updatedAt','userId','orders'] as Key[]
 ): Promise<Pick<Vehicle, Key> | null> => {
   return prisma.vehicle.findUnique({
     where: { id },

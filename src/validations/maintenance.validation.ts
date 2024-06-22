@@ -1,18 +1,14 @@
 import Joi from 'joi';
 
-const createSpare = {
+const createMaintenance = {
   body: Joi.object().keys({
     name: Joi.string(),
-    sku: Joi.string(),
-    stock:Joi.number(),
     price:Joi.number(),
-    condition:Joi.string(),
-    brand:Joi.string(),
-    model:Joi.string()
+    details: Joi.string(),
   })
 };
 
-const getSpares = {
+const getMaintenances = {
   query: Joi.object().keys({
     name: Joi.string(),
     sortBy: Joi.string(),
@@ -21,13 +17,13 @@ const getSpares = {
   })
 };
 
-const getSpare = {
+const getMaintenance = {
   params: Joi.object().keys({
     spareId: Joi.string()
   })
 };
 
-const updateSpare = {
+const updateMaintenance = {
   params: Joi.object().keys({
     spareId: Joi.string()
   }),
@@ -44,16 +40,16 @@ const updateSpare = {
     .min(1)
 };
 
-const deleteSpare = {
+const deleteMaintenance = {
   params: Joi.object().keys({
     spareId: Joi.string()
   })
 };
 
 export default {
-  createSpare,
-  getSpare,
-  getSpares,
-  updateSpare,
-  deleteSpare
+  createMaintenance,
+  getMaintenance,
+  getMaintenances,
+  updateMaintenance,
+  deleteMaintenance
 };

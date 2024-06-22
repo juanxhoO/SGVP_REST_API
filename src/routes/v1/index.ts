@@ -6,12 +6,19 @@ import vehicleRoute from './vehicle.route';
 import docsRoute from './docs.route';
 import config from '../../config/config';
 import sparesRoute from './spare.route'
+import reportsRoute from './report.route'
+import maintenanceRoute from './maintenance.route'
+
 const router = express.Router();
 
 const defaultRoutes = [
   {
     path: '/auth',
     route: authRoute
+  },
+  {
+    path: '/maintenances',
+    route: maintenanceRoute
   },
   {
     path: '/users',
@@ -28,6 +35,10 @@ const defaultRoutes = [
   {
     path: '/spares',
     route: sparesRoute
+  },
+  {
+    path: '/reports',
+    route: reportsRoute
   }
 ];
 

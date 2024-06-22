@@ -5,16 +5,20 @@ import ApiError from '../utils/ApiError';
 
 /**
  * Create a user
- * @param {Object} userBody
- * @returns {Promise<Vehicle>}
+ * @param {Object} reportBody
+ * @returns {Promise<Report>}
  */
-const createReport = async (email: string, name?: string): Promise<Report> => {
+const createReport = async (name: string, files: string, images: string, content: string, userId: string): Promise<Report> => {
   // if (await getUserByEmail(email)) {
   //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   // }
-  return prisma.vehicle.create({
+  return prisma.report.create({
     data: {
-      name
+      name,
+      files,
+      images,
+      content,
+      userId
     }
   });
 };
@@ -38,20 +42,15 @@ const queryReports = async <Key extends keyof Report>(
   },
   keys: Key[] = [
     'id',
-    'email',
-    'name',
-    'password',
-    'role',
-    'isEmailVerified',
     'createdAt',
     'updatedAt'
   ] as Key[]
 ): Promise<Pick<Report, Key>[]> => {
-  const page = options.page ?? 1;
+  const page = options.page ?? 0;
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
-  const users = await prisma.user.findMany({
+  const users = await prisma.report.findMany({
     where: filter,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     skip: page * limit,
@@ -65,22 +64,18 @@ const queryReports = async <Key extends keyof Report>(
  * Get user by id
  * @param {ObjectId} id
  * @param {Array<Key>} keys
- * @returns {Promise<Pick<User, Key> | null>}
+ * @returns {Promise<Pick<Report, Key> | null>}
  */
 const getReportById = async <Key extends keyof Report>(
-  id: number,
+  id: string,
   keys: Key[] = [
     'id',
-    'email',
     'name',
-    'password',
-    'role',
-    'isEmailVerified',
     'createdAt',
     'updatedAt'
   ] as Key[]
 ): Promise<Pick<Report, Key> | null> => {
-  return prisma.user.findUnique({
+  return prisma.report.findUnique({
     where: { id },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   }) as Promise<Pick<Report, Key> | null>;
@@ -93,11 +88,11 @@ const getReportById = async <Key extends keyof Report>(
  * @returns {Promise<User>}
  */
 const updateReportById = async <Key extends keyof Report>(
-  userId: number,
+  reportId: string ,
   updateBody: Prisma.UserUpdateInput,
-  keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
+  keys: Key[] = ['id', 'name'] as Key[]
 ): Promise<Pick<Report, Key> | null> => {
-  const user = await getVehicleById(userId, ['id', 'email', 'name']);
+  const user = await getReportById(reportId, ['id', 'name']);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -115,13 +110,13 @@ const updateReportById = async <Key extends keyof Report>(
 
 /**
  * Delete user by id
- * @param {ObjectId} userId
- * @returns {Promise<User>}
+ * @param {ObjectId} reportId
+ * @returns {Promise<Report>}
  */
-const deleteReportById = async (userId: number): Promise<Report> => {
-  const user = await getReportById(userId);
+const deleteReportById = async (reportId: string): Promise<Report> => {
+  const user = await getReportById(reportId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Report not found');
   }
   await prisma.user.delete({ where: { id: user.id } });
   return user;

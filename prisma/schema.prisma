@@ -21,6 +21,7 @@ model User {
   birthdate       DateTime?
   birthplace      String?
   bloodType       String?
+  rank            OfficeRank
   vehicle         Vehicle[]
   role            Role      @default(USER)
   isEmailVerified Boolean   @default(false)
@@ -28,6 +29,7 @@ model User {
   updatedAt       DateTime  @updatedAt
   Token           Token[]
   orders          Order[]
+  reports         Report[]
 }
 
 model Vehicle {
@@ -39,6 +41,7 @@ model Vehicle {
   brand           String
   plate           String
   engine_cc       Int?
+  type            String?
   engine          String?
   carringcapacity Int?
   passengers      Int?
@@ -56,9 +59,9 @@ model Report {
   files     String
   images    String
   content   String
-  userId    Int
-  date      DateTime
-  createdAt DateTime
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 

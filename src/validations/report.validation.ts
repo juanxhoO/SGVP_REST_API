@@ -7,14 +7,7 @@ const createUser = {
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
-    role: Joi.string().required().valid(Role.USER, Role.ADMIN),
-    rank: Joi.string(),
-    lastname: Joi.string(),
-    phone: Joi.string(),
-    id_card: Joi.string(),
-    birthdate:Joi.date(),
-    birthplace:Joi.string(),
-    bloodType:Joi.string(),
+    role: Joi.string().required().valid(Role.USER, Role.ADMIN)
   })
 };
 
@@ -30,7 +23,7 @@ const getUsers = {
 
 const getUser = {
   params: Joi.object().keys({
-    userId: Joi.string()
+    userId: Joi.number().integer()
   })
 };
 

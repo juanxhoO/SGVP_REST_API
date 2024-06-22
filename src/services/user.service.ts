@@ -1,4 +1,4 @@
-import { User, Role, Prisma } from '@prisma/client';
+import { User, Role, Prisma, OfficeRank } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
@@ -12,8 +12,16 @@ import { encryptPassword } from '../utils/encryption';
 const createUser = async (
   email: string,
   password: string,
+  name: string,
   role: Role = Role.USER,
-  name?: string
+  rank: OfficeRank,
+  lastname: string,
+  phone: string,
+  id_card: string,
+  birthdate: string,
+  birthplace: string,
+  bloodType?: string,
+
 ): Promise<User> => {
   if (await getUserByEmail(email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
@@ -23,7 +31,14 @@ const createUser = async (
       email,
       password: await encryptPassword(password),
       name,
-      role
+      role,
+      rank,
+      lastname,
+      phone,
+      id_card,
+      birthdate,
+      birthplace,
+      bloodType,
     }
   });
 };
@@ -49,6 +64,9 @@ const queryUsers = async <Key extends keyof User>(
     'id',
     'email',
     'name',
+    'lastname',
+    'phone',
+    'rank',
     'role',
     'isEmailVerified',
     'createdAt',
@@ -118,7 +136,7 @@ const getUserByEmail = async <Key extends keyof User>(
 const updateUserById = async <Key extends keyof User>(
   userId: string,
   updateBody: Prisma.UserUpdateInput,
-  keys: Key[] = ['id', 'email', 'name', 'role','lastname','phone','id_card','bloodType'] as Key[]
+  keys: Key[] = ['id', 'email', 'name', 'role', 'lastname', 'phone', 'id_card', 'bloodType'] as Key[]
 ): Promise<Pick<User, Key> | null> => {
   const user = await getUserById(userId, ['id', 'email']);
   if (!user) {

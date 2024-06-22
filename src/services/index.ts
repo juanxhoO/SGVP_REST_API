@@ -5,3 +5,5 @@ export { default as emailService } from './email.service';
 export { default as vehicleService } from './vehicle.service';
 export { default as spareService } from './spare.service';
 export { default as orderService } from './order.service';
+export { default as reportService } from './report.service';
+export { default as maintenanceService } from './maintenance.service';

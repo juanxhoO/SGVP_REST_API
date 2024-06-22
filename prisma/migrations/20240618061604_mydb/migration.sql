@@ -8,11 +8,14 @@ CREATE TYPE "OfficeRank" AS ENUM ('TENIENTE_CORONEL', 'SARGENTO_PRIMERO', 'SARGE
 CREATE TYPE "VehicleType" AS ENUM ('MOTORBIKE', 'SEDAN', 'SUV');
 
 -- CreateEnum
+CREATE TYPE "OrderStatus" AS ENUM ('ACCEPTED', 'CANCELLED', 'PENDANT');
+
+-- CreateEnum
 CREATE TYPE "TokenType" AS ENUM ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL');
 
 -- CreateTable
 CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT,
     "lastname" TEXT,
@@ -32,20 +35,21 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Vehicle" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "images" TEXT NOT NULL,
+    "images" TEXT,
     "chasis" TEXT NOT NULL,
     "model" TEXT NOT NULL,
     "brand" TEXT NOT NULL,
     "plate" TEXT NOT NULL,
-    "engine_cc" INTEGER NOT NULL,
-    "engine" TEXT NOT NULL,
-    "carringcapacity" INTEGER NOT NULL,
-    "passengers" INTEGER NOT NULL,
+    "engine_cc" INTEGER,
+    "engine" TEXT,
+    "carringcapacity" INTEGER,
+    "passengers" INTEGER,
     "mileage" INTEGER NOT NULL,
-    "vehicletype" "VehicleType"[],
-    "userId" INTEGER NOT NULL,
+    "userId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Vehicle_pkey" PRIMARY KEY ("id")
 );
@@ -57,22 +61,24 @@ CREATE TABLE "Report" (
     "files" TEXT NOT NULL,
     "images" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Mecanica" (
+CREATE TABLE "Workshop" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "address" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "phone" TEXT NOT NULL,
 
-    CONSTRAINT "Mecanica_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Workshop_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -82,6 +88,7 @@ CREATE TABLE "Contract" (
     "mecanicId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Contract_pkey" PRIMARY KEY ("id")
 );
@@ -93,6 +100,7 @@ CREATE TABLE "Circuit" (
     "image" TEXT NOT NULL,
     "code" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Circuit_pkey" PRIMARY KEY ("id")
 );
@@ -119,11 +127,13 @@ CREATE TABLE "City" (
 CREATE TABLE "Spare" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "image" TEXT NOT NULL,
+    "image" TEXT,
     "sku" TEXT NOT NULL,
     "stock" INTEGER NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "condition" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "brand" TEXT NOT NULL,
     "model" TEXT NOT NULL,
 
@@ -135,6 +145,7 @@ CREATE TABLE "Notification" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "type" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
 );
@@ -145,6 +156,8 @@ CREATE TABLE "Maintenance" (
     "name" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "details" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Maintenance_pkey" PRIMARY KEY ("id")
 );
@@ -152,10 +165,13 @@ CREATE TABLE "Maintenance" (
 -- CreateTable
 CREATE TABLE "Order" (
     "id" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL,
-    "mecanicId" INTEGER NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "name" TEXT NOT NULL,
+    "vehicleId" TEXT NOT NULL,
+    "mecanicId" INTEGER,
+    "userId" TEXT NOT NULL,
+    "status" "OrderStatus" NOT NULL,
+    "observations" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
@@ -179,7 +195,7 @@ CREATE TABLE "Token" (
     "expires" TIMESTAMP(3) NOT NULL,
     "blacklisted" BOOLEAN NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" INTEGER NOT NULL,
+    "userId" TEXT NOT NULL,
 
     CONSTRAINT "Token_pkey" PRIMARY KEY ("id")
 );
@@ -187,8 +203,20 @@ CREATE TABLE "Token" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Token_userId_key" ON "Token"("userId");
+
 -- AddForeignKey
-ALTER TABLE "Vehicle" ADD CONSTRAINT "Vehicle_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Vehicle" ADD CONSTRAINT "Vehicle_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Report" ADD CONSTRAINT "Report_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_vehicleId_fkey" FOREIGN KEY ("vehicleId") REFERENCES "Vehicle"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

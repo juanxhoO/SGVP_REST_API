@@ -1,24 +1,24 @@
 import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
-import { userValidation } from '../../validations';
-import { userController } from '../../controllers';
+import { maintenanceValidation } from '../../validations';
+import { maintenanceController } from '../../controllers';
 
 const router = express.Router();
 
 router
-  .route('/')
-  .post(validate(userValidation.createUser), userController.createUser)
-  .get(validate(userValidation.getUsers), userController.getUsers);
+    .route('/')
+    .post(validate(maintenanceValidation.getMaintenances),maintenanceController.createMaintenance)
+    .get(validate(maintenanceValidation.getMaintenances), maintenanceController.getMaintenances);
 
 // .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
 // .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
-  .route('/:userId')
-  .get(validate(userValidation.getUser), userController.getUser)
-  .patch( validate(userValidation.updateUser), userController.updateUser)
-  .delete(validate(userValidation.deleteUser), userController.deleteUser);
+    .route('/:maintenaceId')
+    .get(validate(maintenanceValidation.getMaintenance), maintenanceController.getMaintenance)
+    .patch(validate(maintenanceValidation.updateMaintenance), maintenanceController.updateMaintenance)
+    .delete(validate(maintenanceValidation.deleteMaintenance), maintenanceController.deleteMaintenance);
 
 export default router;
 

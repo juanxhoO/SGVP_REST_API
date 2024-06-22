@@ -4,17 +4,16 @@ import prisma from '../client';
 import ApiError from '../utils/ApiError';
 
 /**
- * Create a user
- * @param {Object} userBody
- * @returns {Promise<Vehicle>}
+ * Create a maintenance
+ * @param {Object} maintenanceBody
+ * @returns {Promise<Maintenance>}
  */
-const createMaintenance = async (name?: string): Promise<Maintenance> => {
-  // if (await getUserByEmail(email)) {
-  //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-  // }
-  return prisma.vehicle.create({
+const createMaintenance = async (name: string, price: number, details: string): Promise<Maintenance> => {
+  return prisma.maintenance.create({
     data: {
-      name
+      name,
+      price,
+      details
     }
   });
 };
@@ -38,11 +37,7 @@ const queryMaintenances = async <Key extends keyof Maintenance>(
   },
   keys: Key[] = [
     'id',
-    'email',
     'name',
-    'password',
-    'role',
-    'isEmailVerified',
     'createdAt',
     'updatedAt'
   ] as Key[]
@@ -51,7 +46,7 @@ const queryMaintenances = async <Key extends keyof Maintenance>(
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
-  const users = await prisma.user.findMany({
+  const users = await prisma.maintenance.findMany({
     where: filter,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     skip: page * limit,
@@ -68,19 +63,15 @@ const queryMaintenances = async <Key extends keyof Maintenance>(
  * @returns {Promise<Pick<User, Key> | null>}
  */
 const getMaintenanceById = async <Key extends keyof Maintenance>(
-  id: number,
+  id: string,
   keys: Key[] = [
     'id',
-    'email',
     'name',
-    'password',
-    'role',
-    'isEmailVerified',
     'createdAt',
     'updatedAt'
   ] as Key[]
 ): Promise<Pick<Maintenance, Key> | null> => {
-  return prisma.user.findUnique({
+  return prisma.maintenance.findUnique({
     where: { id },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   }) as Promise<Pick<Maintenance, Key> | null>;
@@ -88,25 +79,25 @@ const getMaintenanceById = async <Key extends keyof Maintenance>(
 
 /**
  * Update user by id
- * @param {ObjectId} userId
+ * @param {ObjectId} maintenanceId
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
 const updateMaintenanceById = async <Key extends keyof Maintenance>(
-  userId: number,
-  updateBody: Prisma.UserUpdateInput,
-  keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
+  userId: string,
+  updateBody: Prisma.MaintenanceUpdateInput,
+  keys: Key[] = ['id','name'] as Key[]
 ): Promise<Pick<Maintenance, Key> | null> => {
-  const user = await getMaintenanceById(userId, ['id', 'email', 'name']);
-  if (!user) {
+  const maintenance = await getMaintenanceById(userId, ['id','name']);
+  if (!maintenance) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   //   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
   //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   //   }
-  const updatedUser = await prisma.user.update({
-    where: { id: user.id },
+  const updatedUser = await prisma.maintenance.update({
+    where: { id: maintenance.id },
     data: updateBody,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   });
@@ -118,8 +109,8 @@ const updateMaintenanceById = async <Key extends keyof Maintenance>(
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteVehicleById = async (userId: number): Promise<Maintenance> => {
-  const user = await deleteVehicleById(userId);
+const deleteMaintenanceById = async (userId: string): Promise<Maintenance> => {
+  const user = await getMaintenanceById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -132,5 +123,5 @@ export default {
   queryMaintenances,
   getMaintenanceById,
   updateMaintenanceById,
-  deleteVehicleById
+  deleteMaintenanceById
 };

@@ -4,13 +4,15 @@ const createVehicle = {
   body: Joi.object().keys({
     name: Joi.string(),
     chasis: Joi.string(),
+    images: Joi.string(),
+    type: Joi.string(),
     brand: Joi.string(),
     model: Joi.string(),
     plate: Joi.string(),
-    engine_cc: Joi.number().integer,
+    engine_cc: Joi.number().integer(),
     engine: Joi.string(),
-    carringcapacity: Joi.number().integer,
-    passengers: Joi.number().integer,
+    carringcapacity: Joi.number().integer(),
+    passengers: Joi.number().integer(),
     mileage: Joi.number(),
   })
 };
