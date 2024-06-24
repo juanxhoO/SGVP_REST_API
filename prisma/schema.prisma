@@ -11,8 +11,8 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(uuid())
-  email           String    @unique
+  id              String     @id @default(uuid())
+  email           String     @unique
   name            String?
   lastname        String?
   phone           String?
@@ -23,10 +23,10 @@ model User {
   bloodType       String?
   rank            OfficeRank
   vehicle         Vehicle[]
-  role            Role      @default(USER)
-  isEmailVerified Boolean   @default(false)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  role            Role       @default(USER)
+  isEmailVerified Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
   Token           Token[]
   orders          Order[]
   reports         Report[]
@@ -60,37 +60,52 @@ model Report {
   images    String
   content   String
   userId    String
-  user      User    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Workshop {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
   email     String
   address   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  phone String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  contract  Contract?
+  phone     String
 }
 
 model Contract {
   id        String   @id @default(uuid())
   name      String
-  mecanicId String
+  mecanicId String   @unique
+  mecanic   Workshop @relation(fields: [mecanicId], references: [id])
   type      String
-  createdAt DateTime
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Circuit {
+  id          String       @id @default(uuid())
+  name        String
+  image       String
+  code        String
+  cityId      String       @unique
+  city        City?        @relation(fields: [cityId], references: [id])
+  subcircuits SubCircuit[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model SubCircuit {
   id        String   @id @default(uuid())
   name      String
   image     String
   code      String
-  createdAt DateTime
+  circuitId String   @unique
+  circuit   Circuit  @relation(fields: [circuitId], references: [id])
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
@@ -102,8 +117,11 @@ model Distrit {
 }
 
 model City {
-  id   String @id @default(uuid())
-  name String
+  id        String    @id @default(uuid())
+  name      String
+  circuits  Circuit[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Spare {
@@ -132,21 +150,25 @@ model Maintenance {
   name      String
   price     Float
   details   String
+  orders    Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Order {
-  id           String      @id @default(uuid())
-  vehicleId    String
-  vehicle      Vehicle     @relation(fields: [vehicleId], references: [id])
-  mecanicId    Int?
-  userId       String
-  user         User        @relation(fields: [userId], references: [id])
-  status       OrderStatus
-  observations String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id             String      @id @default(uuid())
+  vehicleId      String
+  vehicle        Vehicle     @relation(fields: [vehicleId], references: [id])
+  mecanicId      Int?
+  maintenanceDay DateTime
+  userId         String
+  user           User        @relation(fields: [userId], references: [id])
+  status         OrderStatus
+  observations   String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  maintenance    Maintenance @relation(fields: [maintenanceId], references: [id])
+  maintenanceId  String  @unique // relation scalar field (used in the `@relation` attribute above)
 }
 
 model File {

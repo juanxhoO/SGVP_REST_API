@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Circuit" ALTER COLUMN "createdAt" SET DEFAULT CURRENT_TIMESTAMP;

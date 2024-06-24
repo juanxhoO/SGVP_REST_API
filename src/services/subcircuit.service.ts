@@ -1,19 +1,20 @@
-import { Maintenance, Prisma } from '@prisma/client';
+import { SubCircuit, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
 
 /**
- * Create a maintenance
- * @param {Object} maintenanceBody
- * @returns {Promise<Maintenance>}
+ * Create a user
+ * @param {Object} subCircuitBody
+ * @returns {Promise<SubCircuit>}
  */
-const createMaintenance = async (name: string, price: number, details: string): Promise<Maintenance> => {
-  return prisma.maintenance.create({
+const createSubCircuit = async (name: string, image: string, code: string, circuitId: string): Promise<SubCircuit> => {
+  return prisma.subCircuit.create({
     data: {
       name,
-      price,
-      details
+      image,
+      code,
+      circuitId
     }
   });
 };
@@ -27,7 +28,7 @@ const createMaintenance = async (name: string, price: number, details: string): 
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryMaintenances = async <Key extends keyof Maintenance>(
+const querySubCircuit = async <Key extends keyof SubCircuit>(
   filter: object,
   options: {
     limit?: number;
@@ -38,92 +39,94 @@ const queryMaintenances = async <Key extends keyof Maintenance>(
   keys: Key[] = [
     'id',
     'name',
-    'price',
-    'details',
+    'image',
+    'code',
     'createdAt',
     'updatedAt'
   ] as Key[]
-): Promise<Pick<Maintenance, Key>[]> => {
+): Promise<Pick<SubCircuit, Key>[]> => {
   const page = options.page ?? 0;
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
-  const users = await prisma.maintenance.findMany({
+  const users = await prisma.circuit.findMany({
     where: filter,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     skip: page * limit,
     take: limit,
     orderBy: sortBy ? { [sortBy]: sortType } : undefined
   });
-  return users as Pick<Maintenance, Key>[];
+  return users as Pick<SubCircuit, Key>[];
 };
 
 /**
  * Get user by id
  * @param {ObjectId} id
  * @param {Array<Key>} keys
- * @returns {Promise<Pick<User, Key> | null>}
+ * @returns {Promise<Pick<Circuit, Key> | null>}
  */
-const getMaintenanceById = async <Key extends keyof Maintenance>(
+const getSubCircuitById = async <Key extends keyof SubCircuit>(
   id: string,
   keys: Key[] = [
     'id',
     'name',
+    'image',
+    'code',
     'createdAt',
     'updatedAt'
   ] as Key[]
-): Promise<Pick<Maintenance, Key> | null> => {
-  return prisma.maintenance.findUnique({
+): Promise<Pick<SubCircuit, Key> | null> => {
+  return prisma.circuit.findUnique({
     where: { id },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-  }) as Promise<Pick<Maintenance, Key> | null>;
+  }) as Promise<Pick<SubCircuit, Key> | null>;
 };
 
 /**
  * Update user by id
- * @param {ObjectId} maintenanceId
+ * @param {ObjectId} circuitId
  * @param {Object} updateBody
- * @returns {Promise<User>}
+ * @returns {Promise<Circuit>}
  */
-const updateMaintenanceById = async <Key extends keyof Maintenance>(
-  userId: string,
-  updateBody: Prisma.MaintenanceUpdateInput,
-  keys: Key[] = ['id','name'] as Key[]
-): Promise<Pick<Maintenance, Key> | null> => {
-  const maintenance = await getMaintenanceById(userId, ['id','name']);
-  if (!maintenance) {
+const updateSubCircuitById = async <Key extends keyof SubCircuit>(
+  circuitId: string,
+  updateBody: Prisma.CircuitUpdateInput,
+  keys: Key[] = ['id','name', 'image','code'] as Key[]
+): Promise<Pick<SubCircuit, Key> | null> => {
+  const user = await getSubCircuitById(circuitId, ['id', 'name']);
+  if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   //   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
   //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   //   }
-  const updatedUser = await prisma.maintenance.update({
-    where: { id: maintenance.id },
+  const updatedCircuit = await prisma.circuit.update({
+    where: { id: user.id },
     data: updateBody,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   });
-  return updatedUser as Pick<Maintenance, Key> | null;
+  return updatedCircuit as Pick<SubCircuit, Key> | null;
 };
 
 /**
  * Delete user by id
- * @param {ObjectId} userId
+ * @param {ObjectId} circuitId
  * @returns {Promise<User>}
  */
-const deleteMaintenanceById = async (userId: string): Promise<Maintenance> => {
-  const user = await getMaintenanceById(userId);
+const deleteSubCircuitById = async (circuitId: string): Promise<SubCircuit> => {
+  const user = await getSubCircuitById(circuitId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  await prisma.user.delete({ where: { id: user.id } });
+  await prisma.circuit.delete({ where: { id: user.id } });
   return user;
 };
 
 export default {
-  createMaintenance,
-  queryMaintenances,
-  getMaintenanceById,
-  updateMaintenanceById,
-  deleteMaintenanceById
+  createSubCircuit,
+  querySubCircuit,
+  getSubCircuitById,
+  updateSubCircuitById,
+  deleteSubCircuitById
 };

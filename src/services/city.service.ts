@@ -1,4 +1,4 @@
-import { Contract, Prisma } from '@prisma/client';
+import { City, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
@@ -6,15 +6,13 @@ import ApiError from '../utils/ApiError';
 /**
  * Create a user
  * @param {Object} contractBody
- * @returns {Promise<Contract>}
+ * @returns {Promise<City>}
  */
-const createContract = async (name: string, mecanicId: string, type: string): Promise<Contract> => {
+const createCity = async (name: string): Promise<City> => {
 
-  return prisma.contract.create({
+  return prisma.city.create({
     data: {
       name,
-      mecanicId,
-      type
     }
   });
 };
@@ -28,7 +26,7 @@ const createContract = async (name: string, mecanicId: string, type: string): Pr
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryContract = async <Key extends keyof Contract>(
+const queryCities = async <Key extends keyof City>(
   filter: object,
   options: {
     limit?: number;
@@ -42,19 +40,19 @@ const queryContract = async <Key extends keyof Contract>(
     'createdAt',
     'updatedAt'
   ] as Key[]
-): Promise<Pick<Contract, Key>[]> => {
+): Promise<Pick<City, Key>[]> => {
   const page = options.page ?? 0;
-  const limit = options.limit ?? 10;
+  const limit = options.limit ?? 100;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
-  const contracts = await prisma.contract.findMany({
+  const contracts = await prisma.city.findMany({
     where: filter,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     skip: page * limit,
     take: limit,
     orderBy: sortBy ? { [sortBy]: sortType } : undefined
   });
-  return contracts as Pick<Contract, Key>[];
+  return contracts as Pick<City, Key>[];
 };
 
 /**
@@ -63,18 +61,20 @@ const queryContract = async <Key extends keyof Contract>(
  * @param {Array<Key>} keys
  * @returns {Promise<Pick<User, Key> | null>}
  */
-const getContractById = async <Key extends keyof Contract>(
+const getCityById = async <Key extends keyof City>(
   id: string,
   keys: Key[] = [
     'id',
+    'name',
+    'circuits',
     'createdAt',
     'updatedAt'
   ] as Key[]
-): Promise<Pick<Contract, Key> | null> => {
-  return prisma.contract.findUnique({
+): Promise<Pick<City, Key> | null> => {
+  return prisma.city.findUnique({
     where: { id },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-  }) as Promise<Pick<Contract, Key> | null>;
+  }) as Promise<Pick<City, Key> | null>;
 };
 
 /**
@@ -83,12 +83,12 @@ const getContractById = async <Key extends keyof Contract>(
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateContractById = async <Key extends keyof Contract>(
+const updateCityById = async <Key extends keyof City>(
   userId: string,
   updateBody: Prisma.UserUpdateInput,
   keys: Key[] = ['id', 'name'] as Key[]
-): Promise<Pick<Contract, Key> | null> => {
-  const user = await getContractById(userId, ['id', 'name']);
+): Promise<Pick<City, Key> | null> => {
+  const user = await getCityById(userId, ['id', 'name']);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -98,7 +98,7 @@ const updateContractById = async <Key extends keyof Contract>(
     data: updateBody,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   });
-  return updatedUser as Pick<Contract, Key> | null;
+  return updatedUser as Pick<City, Key> | null;
 };
 
 /**
@@ -106,8 +106,8 @@ const updateContractById = async <Key extends keyof Contract>(
  * @param {ObjectId} userId
  * @returns {Promise<Contract>}
  */
-const deleteContractById = async (userId: string): Promise<Contract> => {
-  const user = await getContractById(userId);
+const deleteCityById = async (userId: string): Promise<City> => {
+  const user = await getCityById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -116,9 +116,9 @@ const deleteContractById = async (userId: string): Promise<Contract> => {
 };
 
 export default {
-  createContract,
-  queryContract,
-  getContractById,
-  updateContractById,
-  deleteContractById
-};
+  createCity,
+  queryCities,
+  getCityById,
+  updateCityById,
+  deleteCityById
+ };

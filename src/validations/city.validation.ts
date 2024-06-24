@@ -1,16 +1,12 @@
 import Joi from 'joi';
 
-const createUser = {
+const createCity = {
     body: Joi.object().keys({
-        userId: Joi.string(),
-        vehicleId: Joi.string(),
-        status: Joi.string(),
-        observations: Joi.string(),
-        maintenanceDay: Joi.date()
+        name: Joi.string(),
     })
 };
 
-const getUsers = {
+const getCities = {
     query: Joi.object().keys({
         name: Joi.string(),
         sortBy: Joi.string(),
@@ -19,13 +15,13 @@ const getUsers = {
     })
 };
 
-const getUser = {
+const getCity = {
     params: Joi.object().keys({
-        userId: Joi.string()
+        cityId: Joi.string()
     })
 };
 
-const updateUser = {
+const updateCity = {
     params: Joi.object().keys({
         userId: Joi.string()
     }),
@@ -40,16 +36,16 @@ const updateUser = {
         .min(1)
 };
 
-const deleteOrder = {
+const deleteCity = {
     params: Joi.object().keys({
-        orderId: Joi.string()
+        circuitId: Joi.string()
     })
 };
 
 export default {
-    createUser,
-    getUsers,
-    getUser,
-    updateUser,
-    deleteOrder
+    createCity,
+    getCities,
+    getCity,
+    updateCity,
+    deleteCity
 };

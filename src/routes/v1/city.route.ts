@@ -1,25 +1,24 @@
 import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
-import { contractValidation } from '../../validations';
-import { contractController } from '../../controllers';
+import { cityValidation } from '../../validations';
+import { cityController } from '../../controllers';
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(validate(contractValidation.createContract), contractController.createUser)
-  .get(validate(contractValidation.getContracts), contractController.getContracts);
+  .post(validate(cityValidation.createCity), cityController.createCity)
+  .get(validate(cityValidation.getCities), cityController.getCities);
 
 // .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
 // .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
-  .route('/:contractId')
-  .get(auth('getUsers'), validate(contractValidation.getContract), contractController.getContract)
+  .route('/:cityId')
+  .get(validate(cityValidation.getCity), cityController.getCity)
   // .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth('manageUsers'), validate(contractValidation.deleteContract), contractController.deleteContract);
-
+  .delete(validate(cityValidation.deleteCity), cityController.deleteCity);
 export default router;
 
 /**

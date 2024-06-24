@@ -5,8 +5,13 @@ import catchAsync from '../utils/catchAsync';
 import { orderService } from '../services';
 
 const createOrder = catchAsync(async (req, res) => {
-  const { userId,vehicleId,status,observations} = req.body;
-  const order = await orderService.createOrder(userId,vehicleId,status,observations);
+  const { userId,vehicleId,status,maintenanceDay,
+    observations } = req.body;
+  const order = await orderService.createOrder(userId,
+    vehicleId,
+    status,
+    maintenanceDay,
+    observations);
   res.status(httpStatus.CREATED).send(order);
 });
 

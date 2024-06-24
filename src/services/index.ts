@@ -7,3 +7,7 @@ export { default as spareService } from './spare.service';
 export { default as orderService } from './order.service';
 export { default as reportService } from './report.service';
 export { default as maintenanceService } from './maintenance.service';
+export { default as contractService } from './contract.service';
+export { default as circuitService } from './circuit.service';
+export { default as cityService } from './city.service';
+export { default as subcircuitService } from './subcircuit.service';

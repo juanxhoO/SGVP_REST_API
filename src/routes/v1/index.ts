@@ -8,6 +8,10 @@ import config from '../../config/config';
 import sparesRoute from './spare.route'
 import reportsRoute from './report.route'
 import maintenanceRoute from './maintenance.route'
+import contractRoute from './contract.route'
+import circuitRoute from './circuit.route'
+import citiestRoute from './city.route'
+import subcircuitsRoute from './subcircuit.route'
 
 const router = express.Router();
 
@@ -17,12 +21,28 @@ const defaultRoutes = [
     route: authRoute
   },
   {
+    path: '/subcircuits',
+    route: subcircuitsRoute
+  },
+  {
+    path: '/circuits',
+    route: circuitRoute
+  },
+  {
+    path: '/cities',
+    route: citiestRoute
+  },
+  {
     path: '/maintenances',
     route: maintenanceRoute
   },
   {
     path: '/users',
     route: userRoute
+  },
+  {
+    path: '/contracts',
+    route: contractRoute
   },
   {
     path: '/orders',

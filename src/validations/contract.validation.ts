@@ -1,16 +1,14 @@
 import Joi from 'joi';
 
-const createUser = {
+const createContract = {
     body: Joi.object().keys({
-        userId: Joi.string(),
-        vehicleId: Joi.string(),
-        status: Joi.string(),
-        observations: Joi.string(),
-        maintenanceDay: Joi.date()
+        name: Joi.string(),
+        mecanicId: Joi.string(),
+        type: Joi.string(),
     })
 };
 
-const getUsers = {
+const getContracts = {
     query: Joi.object().keys({
         name: Joi.string(),
         sortBy: Joi.string(),
@@ -19,13 +17,13 @@ const getUsers = {
     })
 };
 
-const getUser = {
+const getContract = {
     params: Joi.object().keys({
         userId: Joi.string()
     })
 };
 
-const updateUser = {
+const updateContract = {
     params: Joi.object().keys({
         userId: Joi.string()
     }),
@@ -40,16 +38,16 @@ const updateUser = {
         .min(1)
 };
 
-const deleteOrder = {
+const deleteContract = {
     params: Joi.object().keys({
         orderId: Joi.string()
     })
 };
 
 export default {
-    createUser,
-    getUsers,
-    getUser,
-    updateUser,
-    deleteOrder
+    createContract,
+    getContracts,
+    getContract,
+    updateContract,
+    deleteContract
 };

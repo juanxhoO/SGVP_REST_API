@@ -16,7 +16,7 @@ const createVehicle = catchAsync(async (req, res) => {
     engine_cc,
     engine,
     carringcapacity,
-    passengers } = req.body;
+    passengers,userId } = req.body;
   const vehicle = await vehicleService.createVehicle( name,
     chasis,
     model,
@@ -28,7 +28,8 @@ const createVehicle = catchAsync(async (req, res) => {
     engine_cc,
     engine,
     carringcapacity,
-    passengers);
+    passengers,userId
+  );
   res.status(httpStatus.CREATED).send(vehicle);
 });
 

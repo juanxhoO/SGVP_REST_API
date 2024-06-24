@@ -12,13 +12,14 @@ import ApiError from '../utils/ApiError';
  * @returns {Promise<Order>}
  */
 
-const createOrder = async (userId: string, vehicleId: string, status: OrderStatus, observations?: string ): Promise<Order> => {
+const createOrder = async (userId: string, vehicleId: string, status: OrderStatus, maintenanceDay:Date , observations?: string): Promise<Order> => {
   return prisma.order.create({
     data: {
       userId,
       vehicleId,
       status,
-      observations,
+      maintenanceDay,
+      observations
     }
   });
 };
@@ -42,6 +43,10 @@ const queryOrders = async <Key extends keyof Order>(
   },
   keys: Key[] = [
     'id',
+    'user',
+    'vehicle',
+    'status',
+    'maintenanceDay',
     'createdAt',
     'updatedAt'
   ] as Key[]
@@ -100,9 +105,6 @@ const updateOrderById = async <Key extends keyof Order>(
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  //   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
-  //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-  //   }
   const updatedUser = await prisma.user.update({
     where: { id: user.id },
     data: updateBody,

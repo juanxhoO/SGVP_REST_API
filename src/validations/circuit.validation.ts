@@ -1,16 +1,15 @@
 import Joi from 'joi';
 
-const createUser = {
+const createCircuit = {
     body: Joi.object().keys({
-        userId: Joi.string(),
-        vehicleId: Joi.string(),
-        status: Joi.string(),
-        observations: Joi.string(),
-        maintenanceDay: Joi.date()
+        name: Joi.string(),
+        image: Joi.string(),
+        code: Joi.string(),
+        cityId: Joi.string(),
     })
 };
 
-const getUsers = {
+const getCircuits = {
     query: Joi.object().keys({
         name: Joi.string(),
         sortBy: Joi.string(),
@@ -19,13 +18,13 @@ const getUsers = {
     })
 };
 
-const getUser = {
+const getCircuit = {
     params: Joi.object().keys({
-        userId: Joi.string()
+        circuitId: Joi.string()
     })
 };
 
-const updateUser = {
+const updateCircuit = {
     params: Joi.object().keys({
         userId: Joi.string()
     }),
@@ -40,16 +39,16 @@ const updateUser = {
         .min(1)
 };
 
-const deleteOrder = {
+const deleteCircuit = {
     params: Joi.object().keys({
-        orderId: Joi.string()
+        circuitId: Joi.string()
     })
 };
 
 export default {
-    createUser,
-    getUsers,
-    getUser,
-    updateUser,
-    deleteOrder
+    createCircuit,
+    getCircuit,
+    getCircuits,
+    updateCircuit,
+    deleteCircuit
 };

@@ -15,6 +15,7 @@ const createUser = {
     birthdate:Joi.date(),
     birthplace:Joi.string(),
     bloodType:Joi.string(),
+    cityId: Joi.string()
   })
 };
 

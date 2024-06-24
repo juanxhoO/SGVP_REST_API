@@ -21,6 +21,7 @@ const createVehicle = async (
   engine?: string,
   carringcapacity?: number,
   passengers?: number,
+  userId?:string
 ): Promise<Vehicle> => {
   return prisma.vehicle.create({
     data: {
@@ -35,7 +36,8 @@ const createVehicle = async (
       engine_cc,
       engine,
       carringcapacity,
-      passengers
+      passengers,
+      userId
     }
   });
 };
@@ -57,9 +59,20 @@ const queryVehicles = async <Key extends keyof Vehicle>(
     sortBy?: string;
     sortType?: 'asc' | 'desc';
   },
-  keys: Key[] = ['id', 'name', 'createdAt', 'updatedAt'] as Key[]
+  keys: Key[] = ['id', 'name', 
+    'chasis',
+    'model',
+    'brand',
+    'plate',
+    'type',
+    'mileage',
+    'images',
+    'engine_cc',
+    'engine',
+    'carringcapacity',
+    'passengers', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Vehicle, Key>[]> => {
-  const page = options.page ?? 1;
+  const page = options.page ?? 0;
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
