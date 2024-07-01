@@ -16,9 +16,9 @@ router
 
 router
   .route('/:spareId')
-  .get( validate(spareValidation.getSpare), spareController.getSpare)
-  .patch( validate(spareValidation.updateSpare), spareController.updateSpare)
-  .delete( validate(spareValidation.deleteSpare), spareController.deleteSpare);
+  .get(validate(spareValidation.getSpare), spareController.getSpare)
+  .patch(validate(spareValidation.updateSpare), spareController.updateSpare)
+  .delete(validate(spareValidation.deleteSpare), spareController.deleteSpare);
 
 export default router;
 

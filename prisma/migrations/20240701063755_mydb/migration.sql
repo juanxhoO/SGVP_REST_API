@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('USER', 'MECHANIC', 'TECHNIC', 'ADMIN', 'MANAGEMENT');
+CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
 -- CreateEnum
 CREATE TYPE "OfficeRank" AS ENUM ('TENIENTE_CORONEL', 'SARGENTO_PRIMERO', 'SARGENTO_SEGUNDO', 'CABO_PRIMERO', 'CABO_SEGUNDO', 'TENIENTE', 'MAYOR', 'CAPITAN', 'POLICIA', 'SUBTENIENTE');
@@ -23,8 +23,11 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "id_card" TEXT,
     "birthdate" TIMESTAMP(3),
-    "birthplace" TEXT,
+    "city" TEXT,
     "bloodType" TEXT,
+    "birthplace" TEXT,
+    "subcircuitId" TEXT,
+    "rank" "OfficeRank" NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'USER',
     "isEmailVerified" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -43,6 +46,7 @@ CREATE TABLE "Vehicle" (
     "brand" TEXT NOT NULL,
     "plate" TEXT NOT NULL,
     "engine_cc" INTEGER,
+    "type" TEXT NOT NULL,
     "engine" TEXT,
     "carringcapacity" INTEGER,
     "passengers" INTEGER,
@@ -62,7 +66,7 @@ CREATE TABLE "Report" (
     "images" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
@@ -85,9 +89,10 @@ CREATE TABLE "Workshop" (
 CREATE TABLE "Contract" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "mecanicId" TEXT NOT NULL,
+    "details" TEXT NOT NULL,
+    "workshopId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Contract_pkey" PRIMARY KEY ("id")
@@ -99,10 +104,24 @@ CREATE TABLE "Circuit" (
     "name" TEXT NOT NULL,
     "image" TEXT NOT NULL,
     "code" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL,
+    "cityId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Circuit_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SubCircuit" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "circuitId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "SubCircuit_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -119,6 +138,8 @@ CREATE TABLE "Distrit" (
 CREATE TABLE "City" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "City_pkey" PRIMARY KEY ("id")
 );
@@ -167,11 +188,14 @@ CREATE TABLE "Order" (
     "id" TEXT NOT NULL,
     "vehicleId" TEXT NOT NULL,
     "mecanicId" INTEGER,
+    "selectedTime" TEXT NOT NULL,
+    "maintenanceDay" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
     "status" "OrderStatus" NOT NULL,
     "observations" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "maintenanceId" TEXT NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
@@ -204,7 +228,22 @@ CREATE TABLE "Token" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_subcircuitId_key" ON "User"("subcircuitId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Contract_workshopId_key" ON "Contract"("workshopId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Circuit_code_key" ON "Circuit"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "SubCircuit_code_key" ON "SubCircuit"("code");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Token_userId_key" ON "Token"("userId");
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_subcircuitId_fkey" FOREIGN KEY ("subcircuitId") REFERENCES "SubCircuit"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Vehicle" ADD CONSTRAINT "Vehicle_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -213,10 +252,22 @@ ALTER TABLE "Vehicle" ADD CONSTRAINT "Vehicle_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Report" ADD CONSTRAINT "Report_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Contract" ADD CONSTRAINT "Contract_workshopId_fkey" FOREIGN KEY ("workshopId") REFERENCES "Workshop"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Circuit" ADD CONSTRAINT "Circuit_cityId_fkey" FOREIGN KEY ("cityId") REFERENCES "City"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SubCircuit" ADD CONSTRAINT "SubCircuit_circuitId_fkey" FOREIGN KEY ("circuitId") REFERENCES "Circuit"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Order" ADD CONSTRAINT "Order_vehicleId_fkey" FOREIGN KEY ("vehicleId") REFERENCES "Vehicle"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_maintenanceId_fkey" FOREIGN KEY ("maintenanceId") REFERENCES "Maintenance"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

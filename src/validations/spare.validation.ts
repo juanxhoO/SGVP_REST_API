@@ -4,11 +4,11 @@ const createSpare = {
   body: Joi.object().keys({
     name: Joi.string(),
     sku: Joi.string(),
-    stock:Joi.number(),
-    price:Joi.number(),
-    condition:Joi.string(),
-    brand:Joi.string(),
-    model:Joi.string()
+    stock: Joi.number(),
+    price: Joi.number(),
+    condition: Joi.string(),
+    brand: Joi.string(),
+    model: Joi.string()
   })
 };
 
@@ -35,11 +35,11 @@ const updateSpare = {
     .keys({
       name: Joi.string(),
       sku: Joi.string(),
-      stock:Joi.number(),
-      price:Joi.number(),
-      condition:Joi.string(),
-      brand:Joi.string(),
-      model:Joi.string()
+      stock: Joi.number(),
+      price: Joi.number(),
+      condition: Joi.string(),
+      brand: Joi.string(),
+      model: Joi.string()
     })
     .min(1)
 };

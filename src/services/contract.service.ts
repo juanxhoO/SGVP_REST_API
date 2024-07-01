@@ -8,13 +8,13 @@ import ApiError from '../utils/ApiError';
  * @param {Object} contractBody
  * @returns {Promise<Contract>}
  */
-const createContract = async (name: string, mecanicId: string, type: string): Promise<Contract> => {
-
+const createContract = async (name: string, workshopId: string, type: string, details:string): Promise<Contract> => {
   return prisma.contract.create({
     data: {
       name,
-      mecanicId,
-      type
+      workshopId,
+      type,
+      details
     }
   });
 };
@@ -36,12 +36,7 @@ const queryContract = async <Key extends keyof Contract>(
     sortBy?: string;
     sortType?: 'asc' | 'desc';
   },
-  keys: Key[] = [
-    'id',
-    'name',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'name', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Contract, Key>[]> => {
   const page = options.page ?? 0;
   const limit = options.limit ?? 10;
@@ -65,11 +60,7 @@ const queryContract = async <Key extends keyof Contract>(
  */
 const getContractById = async <Key extends keyof Contract>(
   id: string,
-  keys: Key[] = [
-    'id',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Contract, Key> | null> => {
   return prisma.contract.findUnique({
     where: { id },

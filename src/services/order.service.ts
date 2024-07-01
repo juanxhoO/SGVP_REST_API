@@ -1,4 +1,4 @@
-import { Order, User, Vehicle, Prisma, OrderStatus } from '@prisma/client';
+import { Order, Prisma, OrderStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
@@ -12,13 +12,23 @@ import ApiError from '../utils/ApiError';
  * @returns {Promise<Order>}
  */
 
-const createOrder = async (userId: string, vehicleId: string, status: OrderStatus, maintenanceDay:Date , observations?: string): Promise<Order> => {
+const createOrder = async (
+  userId: string,
+  vehicleId: string,
+  status: OrderStatus,
+  maintenanceDay: Date,
+  maintenanceId: string,
+  selectedTime: string,
+  observations?: string
+): Promise<Order> => {
   return prisma.order.create({
     data: {
       userId,
       vehicleId,
       status,
       maintenanceDay,
+      maintenanceId,
+      selectedTime,
       observations
     }
   });
@@ -75,9 +85,12 @@ const getOrderById = async <Key extends keyof Order>(
   id: string,
   keys: Key[] = [
     'id',
-    'userId',
-    'vehicleId',
+    'user',
     'status',
+    'vehicle',
+    'maintenance',
+    'maintenanceDay',
+    'selectedTime',
     'observations',
     'createdAt',
     'updatedAt'
@@ -93,7 +106,7 @@ const getOrderById = async <Key extends keyof Order>(
  * Update user by id
  * @param {ObjectId} userId
  * @param {Object} updateBody
- * @returns {Promise<User>}
+ * @returns {Promise<Order>}
  */
 const updateOrderById = async <Key extends keyof Order>(
   userId: string,

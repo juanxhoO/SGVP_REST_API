@@ -10,11 +10,12 @@ const createVehicle = {
     model: Joi.string(),
     plate: Joi.string(),
     engine_cc: Joi.number().integer(),
-    userId:Joi.string(),
+    userId: Joi.string(),
+    vehicleType: Joi.string(),
     engine: Joi.string(),
     carringcapacity: Joi.number().integer(),
     passengers: Joi.number().integer(),
-    mileage: Joi.number(),
+    mileage: Joi.number()
   })
 };
 
@@ -34,7 +35,7 @@ const getVehicles = {
     engine: Joi.string(),
     carringcapacity: Joi.number().integer(),
     passengers: Joi.number().integer(),
-    mileage: Joi.number(),
+    mileage: Joi.number()
   })
 };
 
@@ -50,8 +51,20 @@ const updateVehicle = {
   }),
   body: Joi.object()
     .keys({
-      email: Joi.string().email(),
-      name: Joi.string()
+      name: Joi.string(),
+      chasis: Joi.string(),
+      images: Joi.string(),
+      type: Joi.string(),
+      brand: Joi.string(),
+      model: Joi.string(),
+      plate: Joi.string(),
+      engine_cc: Joi.number().integer(),
+      userId: Joi.string(),
+      vehicleType: Joi.string(),
+      engine: Joi.string(),
+      carringcapacity: Joi.number().integer(),
+      passengers: Joi.number().integer(),
+      mileage: Joi.number()
     })
     .min(1)
 };

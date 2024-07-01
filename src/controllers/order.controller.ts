@@ -5,13 +5,22 @@ import catchAsync from '../utils/catchAsync';
 import { orderService } from '../services';
 
 const createOrder = catchAsync(async (req, res) => {
-  const { userId,vehicleId,status,maintenanceDay,
-    observations } = req.body;
-  const order = await orderService.createOrder(userId,
+  const { userId,
     vehicleId,
     status,
     maintenanceDay,
-    observations);
+    maintenanceId,
+    selectedTime,
+    observations } = req.body;
+  const order = await orderService.createOrder(
+    userId,
+    vehicleId,
+    status,
+    maintenanceDay,
+    maintenanceId,
+    selectedTime,
+    observations
+  );
   res.status(httpStatus.CREATED).send(order);
 });
 
@@ -24,7 +33,6 @@ const getOrders = catchAsync(async (req, res) => {
 
 const getOrder = catchAsync(async (req, res) => {
   const order = await orderService.getOrderById(req.params.orderId);
-  console.log(order)
   if (!order) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }

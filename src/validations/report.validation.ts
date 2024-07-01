@@ -30,12 +30,12 @@ const getUser = {
 const updateUser = {
   params: Joi.object().keys({
     userId: Joi.string()
-    }),
+  }),
   body: Joi.object()
     .keys({
       email: Joi.string().email(),
       password: Joi.string().custom(password),
-      lastname:Joi.string(),
+      lastname: Joi.string(),
       phone: Joi.string(),
       name: Joi.string(),
       id_card: Joi.string()

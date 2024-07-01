@@ -8,17 +8,17 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(validate(orderValidation.createUser), orderController.createOrder)
-  .get(validate(orderValidation.getUsers), orderController.getOrders);
+  .post(validate(orderValidation.createOrder), orderController.createOrder)
+  .get(validate(orderValidation.getOrders), orderController.getOrders);
 
 // .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
 // .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
-  .route('/:userId')
-  .get( validate(orderValidation.getUser), orderController.getOrder)
-  .patch(validate(orderValidation.updateUser), orderController.updateOrder)
-  .delete( orderController.deleteOrder);
+  .route('/:orderId')
+  .get(validate(orderValidation.getOrder), orderController.getOrder)
+  .patch(validate(orderValidation.updateOrder), orderController.updateOrder)
+  .delete(orderController.deleteOrder);
 
 export default router;
 
@@ -144,7 +144,7 @@ export default router;
  *                   type: integer
  *                   example: 1
  *       "401":
- *         $ref: '#/components/responses/Unauthorized'
+ *         $ref: '#/components/responses/UnaugetOrderByIdthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  */

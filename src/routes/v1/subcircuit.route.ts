@@ -15,7 +15,7 @@ router
 // .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
-  .route('/:circuitId')
+  .route('/:subcircuitId')
   .get(validate(subcircuitValidation.getSubCircuit), subcircuitController.getSubCircuit)
   // .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(validate(subcircuitValidation.deleteSubCircuit), subcircuitController.deleteSubCircuit);

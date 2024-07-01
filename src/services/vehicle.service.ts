@@ -21,7 +21,7 @@ const createVehicle = async (
   engine?: string,
   carringcapacity?: number,
   passengers?: number,
-  userId?:string
+  userId?: string
 ): Promise<Vehicle> => {
   return prisma.vehicle.create({
     data: {
@@ -59,7 +59,9 @@ const queryVehicles = async <Key extends keyof Vehicle>(
     sortBy?: string;
     sortType?: 'asc' | 'desc';
   },
-  keys: Key[] = ['id', 'name', 
+  keys: Key[] = [
+    'id',
+    'name',
     'chasis',
     'model',
     'brand',
@@ -70,7 +72,10 @@ const queryVehicles = async <Key extends keyof Vehicle>(
     'engine_cc',
     'engine',
     'carringcapacity',
-    'passengers', 'createdAt', 'updatedAt'] as Key[]
+    'passengers',
+    'createdAt',
+    'updatedAt'
+  ] as Key[]
 ): Promise<Pick<Vehicle, Key>[]> => {
   const page = options.page ?? 0;
   const limit = options.limit ?? 10;
@@ -94,7 +99,25 @@ const queryVehicles = async <Key extends keyof Vehicle>(
  */
 const getVehicleById = async <Key extends keyof Vehicle>(
   id: string,
-  keys: Key[] = ['id', 'name', 'images', 'chasis', 'model', 'brand', 'plate',  'engine_cc', 'engine', 'type', 'carringcapacity','passengers', 'mileage', 'createdAt', 'updatedAt','userId','orders'] as Key[]
+  keys: Key[] = [
+    'id',
+    'name',
+    'images',
+    'chasis',
+    'model',
+    'brand',
+    'plate',
+    'engine_cc',
+    'engine',
+    'type',
+    'carringcapacity',
+    'passengers',
+    'mileage',
+    'createdAt',
+    'updatedAt',
+    'user',
+    'orders'
+  ] as Key[]
 ): Promise<Pick<Vehicle, Key> | null> => {
   return prisma.vehicle.findUnique({
     where: { id },

@@ -5,14 +5,8 @@ import catchAsync from '../utils/catchAsync';
 import { subcircuitService } from '../services';
 
 const createSubCircuit = catchAsync(async (req, res) => {
-  const {  name,
-    image,
-    code,
-    circuitId } = req.body;
-  const spare = await subcircuitService.createSubCircuit(  name,
-    image,
-    code,
-    circuitId);
+  const { name, image, code, circuitId } = req.body;
+  const spare = await subcircuitService.createSubCircuit(name, image, code, circuitId);
   res.status(httpStatus.CREATED).send(spare);
 });
 
@@ -24,9 +18,10 @@ const getSubCircuits = catchAsync(async (req, res) => {
 });
 
 const getSubCircuit = catchAsync(async (req, res) => {
-  const user = await subcircuitService.getSubCircuitById(req.params.spareId);
+  console.log(req.params.subcircuitId);
+  const user = await subcircuitService.getSubCircuitById(req.params.subcircuitId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Spare not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subcircuit not found');
   }
   res.send(user);
 });
@@ -37,7 +32,7 @@ const updateSubCircuit = catchAsync(async (req, res) => {
 });
 
 const deleteSubCircuit = catchAsync(async (req, res) => {
-  await subcircuitService.deleteSubCircuitById(req.params.spareId);
+  await subcircuitService.deleteSubCircuitById(req.params.subcircuitId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

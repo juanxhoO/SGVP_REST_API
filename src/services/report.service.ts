@@ -8,7 +8,13 @@ import ApiError from '../utils/ApiError';
  * @param {Object} reportBody
  * @returns {Promise<Report>}
  */
-const createReport = async (name: string, files: string, images: string, content: string, userId: string): Promise<Report> => {
+const createReport = async (
+  name: string,
+  files: string,
+  images: string,
+  content: string,
+  userId: string
+): Promise<Report> => {
   // if (await getUserByEmail(email)) {
   //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   // }
@@ -40,11 +46,7 @@ const queryReports = async <Key extends keyof Report>(
     sortBy?: string;
     sortType?: 'asc' | 'desc';
   },
-  keys: Key[] = [
-    'id',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Report, Key>[]> => {
   const page = options.page ?? 0;
   const limit = options.limit ?? 10;
@@ -68,12 +70,7 @@ const queryReports = async <Key extends keyof Report>(
  */
 const getReportById = async <Key extends keyof Report>(
   id: string,
-  keys: Key[] = [
-    'id',
-    'name',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'name', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Report, Key> | null> => {
   return prisma.report.findUnique({
     where: { id },
@@ -88,7 +85,7 @@ const getReportById = async <Key extends keyof Report>(
  * @returns {Promise<User>}
  */
 const updateReportById = async <Key extends keyof Report>(
-  reportId: string ,
+  reportId: string,
   updateBody: Prisma.UserUpdateInput,
   keys: Key[] = ['id', 'name'] as Key[]
 ): Promise<Pick<Report, Key> | null> => {

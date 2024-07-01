@@ -1,17 +1,17 @@
 import express from 'express';
 import authRoute from './auth.route';
 import userRoute from './user.route';
-import orderRoute from './order.route'
+import orderRoute from './order.route';
 import vehicleRoute from './vehicle.route';
 import docsRoute from './docs.route';
 import config from '../../config/config';
-import sparesRoute from './spare.route'
-import reportsRoute from './report.route'
-import maintenanceRoute from './maintenance.route'
-import contractRoute from './contract.route'
-import circuitRoute from './circuit.route'
-import citiestRoute from './city.route'
-import subcircuitsRoute from './subcircuit.route'
+import sparesRoute from './spare.route';
+import reportsRoute from './report.route';
+import maintenanceRoute from './maintenance.route';
+import contractRoute from './contract.route';
+import circuitRoute from './circuit.route';
+import citiestRoute from './city.route';
+import subcircuitsRoute from './subcircuit.route';
 
 const router = express.Router();
 

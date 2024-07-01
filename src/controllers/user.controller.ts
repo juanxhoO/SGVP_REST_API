@@ -5,7 +5,8 @@ import catchAsync from '../utils/catchAsync';
 import { userService } from '../services';
 
 const createUser = catchAsync(async (req, res) => {
-  const { email,
+  const {
+    email,
     password,
     name,
     role,
@@ -15,8 +16,12 @@ const createUser = catchAsync(async (req, res) => {
     id_card,
     birthdate,
     birthplace,
-    bloodType } = req.body;
-  const user = await userService.createUser(email,
+    bloodType,
+    subcircuitId,
+    city
+  } = req.body;
+  const user = await userService.createUser(
+    email,
     password,
     name,
     role,
@@ -26,7 +31,10 @@ const createUser = catchAsync(async (req, res) => {
     id_card,
     birthdate,
     birthplace,
-    bloodType,);
+    bloodType,
+    subcircuitId,
+    city
+  );
   res.status(httpStatus.CREATED).send(user);
 });
 
@@ -46,6 +54,7 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
+  console.log(req.body);
   const user = await userService.updateUserById(req.params.userId, req.body);
   res.send(user);
 });

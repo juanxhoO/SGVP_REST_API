@@ -19,9 +19,10 @@ const createUser = async (
   phone: string,
   id_card: string,
   birthdate: string,
-  birthplace: string,
+  birthplace?: string,
   bloodType?: string,
-
+  subcircuitId?: string,
+  city?: string
 ): Promise<User> => {
   if (await getUserByEmail(email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
@@ -39,6 +40,8 @@ const createUser = async (
       birthdate,
       birthplace,
       bloodType,
+      subcircuitId,
+      city
     }
   });
 };
@@ -104,10 +107,12 @@ const getUserById = async <Key extends keyof User>(
     'name',
     'lastname',
     'phone',
+    'city',
     'birthdate',
     'bloodType',
     'id_card',
     'rank',
+    'subcircuit',
     'vehicle',
     'role',
     'isEmailVerified',
@@ -129,7 +134,7 @@ const getUserById = async <Key extends keyof User>(
  */
 const getUserByEmail = async <Key extends keyof User>(
   email: string,
-  keys: Key[] = ['id', 'email', 'isEmailVerified', 'createdAt', 'updatedAt'] as Key[]
+  keys: Key[] = ['id', 'email', 'password', 'isEmailVerified', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<User, Key> | null> => {
   return prisma.user.findUnique({
     where: { email },
@@ -146,7 +151,19 @@ const getUserByEmail = async <Key extends keyof User>(
 const updateUserById = async <Key extends keyof User>(
   userId: string,
   updateBody: Prisma.UserUpdateInput,
-  keys: Key[] = ['id', 'email', 'name', 'role', 'lastname', 'phone', 'id_card', 'bloodType'] as Key[]
+  keys: Key[] = [
+    'id',
+    'email',
+    'name',
+    'city',
+    'role',
+    'lastname',
+    'subcircuit',
+    'phone',
+    'id_card',
+    'bloodType',
+    'password'
+  ] as Key[]
 ): Promise<Pick<User, Key> | null> => {
   const user = await getUserById(userId, ['id', 'email']);
   if (!user) {

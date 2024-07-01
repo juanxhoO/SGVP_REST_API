@@ -8,7 +8,11 @@ import ApiError from '../utils/ApiError';
  * @param {Object} maintenanceBody
  * @returns {Promise<Maintenance>}
  */
-const createMaintenance = async (name: string, price: number, details: string): Promise<Maintenance> => {
+const createMaintenance = async (
+  name: string,
+  price: number,
+  details: string
+): Promise<Maintenance> => {
   return prisma.maintenance.create({
     data: {
       name,
@@ -35,14 +39,7 @@ const queryMaintenances = async <Key extends keyof Maintenance>(
     sortBy?: string;
     sortType?: 'asc' | 'desc';
   },
-  keys: Key[] = [
-    'id',
-    'name',
-    'price',
-    'details',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'name', 'price', 'details', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Maintenance, Key>[]> => {
   const page = options.page ?? 0;
   const limit = options.limit ?? 10;
@@ -62,16 +59,11 @@ const queryMaintenances = async <Key extends keyof Maintenance>(
  * Get user by id
  * @param {ObjectId} id
  * @param {Array<Key>} keys
- * @returns {Promise<Pick<User, Key> | null>}
+ * @returns {Promise<Pick<Maintenance, Key> | null>}
  */
 const getMaintenanceById = async <Key extends keyof Maintenance>(
   id: string,
-  keys: Key[] = [
-    'id',
-    'name',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'name', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Maintenance, Key> | null> => {
   return prisma.maintenance.findUnique({
     where: { id },
@@ -83,14 +75,14 @@ const getMaintenanceById = async <Key extends keyof Maintenance>(
  * Update user by id
  * @param {ObjectId} maintenanceId
  * @param {Object} updateBody
- * @returns {Promise<User>}
+ * @returns {Promise<Maintenance>}
  */
 const updateMaintenanceById = async <Key extends keyof Maintenance>(
-  userId: string,
+  maintenanceId: string,
   updateBody: Prisma.MaintenanceUpdateInput,
-  keys: Key[] = ['id','name'] as Key[]
+  keys: Key[] = ['id', 'name'] as Key[]
 ): Promise<Pick<Maintenance, Key> | null> => {
-  const maintenance = await getMaintenanceById(userId, ['id','name']);
+  const maintenance = await getMaintenanceById(maintenanceId, ['id', 'name']);
   if (!maintenance) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -108,15 +100,15 @@ const updateMaintenanceById = async <Key extends keyof Maintenance>(
 
 /**
  * Delete user by id
- * @param {ObjectId} userId
- * @returns {Promise<User>}
+ * @param {ObjectId} maintenanceId
+ * @returns {Promise<Maintenance  >}
  */
-const deleteMaintenanceById = async (userId: string): Promise<Maintenance> => {
-  const user = await getMaintenanceById(userId);
+const deleteMaintenanceById = async (maintenanceId: string): Promise<Maintenance> => {
+  const user = await getMaintenanceById(maintenanceId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  await prisma.user.delete({ where: { id: user.id } });
+  await prisma.maintenance.delete({ where: { id: user.id } });
   return user;
 };
 

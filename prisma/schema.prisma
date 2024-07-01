@@ -11,22 +11,25 @@ datasource db {
 }
 
 model User {
-  id              String     @id @default(uuid())
-  email           String     @unique
+  id              String      @id @default(uuid())
+  email           String      @unique
   name            String?
   lastname        String?
   phone           String?
   password        String
   id_card         String?
   birthdate       DateTime?
-  birthplace      String?
+  city            String? 
   bloodType       String?
+  birthplace      String?
+  subcircuitId    String?     @unique
+  subcircuit      SubCircuit? @relation(fields: [subcircuitId], references: [id])
   rank            OfficeRank
   vehicle         Vehicle[]
-  role            Role       @default(USER)
-  isEmailVerified Boolean    @default(false)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  role            Role        @default(USER)
+  isEmailVerified Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
   Token           Token[]
   orders          Order[]
   reports         Report[]
@@ -41,7 +44,7 @@ model Vehicle {
   brand           String
   plate           String
   engine_cc       Int?
-  type            String?
+  type            String
   engine          String?
   carringcapacity Int?
   passengers      Int?
@@ -77,21 +80,22 @@ model Workshop {
 }
 
 model Contract {
-  id        String   @id @default(uuid())
-  name      String
-  mecanicId String   @unique
-  mecanic   Workshop @relation(fields: [mecanicId], references: [id])
-  type      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(uuid())
+  name       String
+  details    String
+  workshopId String   @unique
+  workshop   Workshop @relation(fields: [workshopId], references: [id])
+  type       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Circuit {
   id          String       @id @default(uuid())
   name        String
   image       String
-  code        String
-  cityId      String       @unique
+  code        String       @unique
+  cityId      String
   city        City?        @relation(fields: [cityId], references: [id])
   subcircuits SubCircuit[]
   createdAt   DateTime     @default(now())
@@ -102,11 +106,12 @@ model SubCircuit {
   id        String   @id @default(uuid())
   name      String
   image     String
-  code      String
-  circuitId String   @unique
-  circuit   Circuit  @relation(fields: [circuitId], references: [id])
+  code      String   @unique
+  circuitId String
+  circuit   Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  users     User[]
 }
 
 model Distrit {
@@ -160,6 +165,7 @@ model Order {
   vehicleId      String
   vehicle        Vehicle     @relation(fields: [vehicleId], references: [id])
   mecanicId      Int?
+  selectedTime   String
   maintenanceDay DateTime
   userId         String
   user           User        @relation(fields: [userId], references: [id])
@@ -168,7 +174,7 @@ model Order {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   maintenance    Maintenance @relation(fields: [maintenanceId], references: [id])
-  maintenanceId  String  @unique // relation scalar field (used in the `@relation` attribute above)
+  maintenanceId  String       // relation scalar field (used in the `@relation` attribute above)
 }
 
 model File {
@@ -192,10 +198,7 @@ model Token {
 
 enum Role {
   USER
-  MECHANIC
-  TECHNIC
   ADMIN
-  MANAGEMENT
 }
 
 enum OfficeRank {

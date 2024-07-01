@@ -7,18 +7,21 @@ import { maintenanceController } from '../../controllers';
 const router = express.Router();
 
 router
-    .route('/')
-    .post(validate(maintenanceValidation.getMaintenances),maintenanceController.createMaintenance)
-    .get(validate(maintenanceValidation.getMaintenances), maintenanceController.getMaintenances);
+  .route('/')
+  .post(validate(maintenanceValidation.getMaintenances), maintenanceController.createMaintenance)
+  .get(validate(maintenanceValidation.getMaintenances), maintenanceController.getMaintenances);
 
 // .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
 // .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
-    .route('/:maintenaceId')
-    .get(validate(maintenanceValidation.getMaintenance), maintenanceController.getMaintenance)
-    .patch(validate(maintenanceValidation.updateMaintenance), maintenanceController.updateMaintenance)
-    .delete(validate(maintenanceValidation.deleteMaintenance), maintenanceController.deleteMaintenance);
+  .route('/:maintenanceId')
+  .get(validate(maintenanceValidation.getMaintenance), maintenanceController.getMaintenance)
+  .patch(validate(maintenanceValidation.updateMaintenance), maintenanceController.updateMaintenance)
+  .delete(
+    validate(maintenanceValidation.deleteMaintenance),
+    maintenanceController.deleteMaintenance
+  );
 
 export default router;
 

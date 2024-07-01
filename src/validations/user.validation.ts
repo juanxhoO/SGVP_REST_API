@@ -12,10 +12,10 @@ const createUser = {
     lastname: Joi.string(),
     phone: Joi.string(),
     id_card: Joi.string(),
-    birthdate:Joi.date(),
-    birthplace:Joi.string(),
-    bloodType:Joi.string(),
-    cityId: Joi.string()
+    birthdate: Joi.date(),
+    birthplace: Joi.string(),
+    bloodType: Joi.string(),
+    city: Joi.string()
   })
 };
 
@@ -38,13 +38,19 @@ const getUser = {
 const updateUser = {
   params: Joi.object().keys({
     userId: Joi.string()
-    }),
+  }),
   body: Joi.object()
     .keys({
       email: Joi.string().email(),
-      password: Joi.string().custom(password),
-      lastname:Joi.string(),
+      role: Joi.string().valid(Role.USER, Role.ADMIN),
+      lastname: Joi.string(),
+      password: Joi.string(),
+      birthdate: Joi.date(),
       phone: Joi.string(),
+      city: Joi.string(),
+      rank: Joi.string(),
+      subcircuitId: Joi.string(),
+      bloodType: Joi.string(),
       name: Joi.string(),
       id_card: Joi.string()
     })

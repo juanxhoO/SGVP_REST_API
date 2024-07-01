@@ -9,10 +9,9 @@ import ApiError from '../utils/ApiError';
  * @returns {Promise<City>}
  */
 const createCity = async (name: string): Promise<City> => {
-
   return prisma.city.create({
     data: {
-      name,
+      name
     }
   });
 };
@@ -34,12 +33,7 @@ const queryCities = async <Key extends keyof City>(
     sortBy?: string;
     sortType?: 'asc' | 'desc';
   },
-  keys: Key[] = [
-    'id',
-    'name',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'name', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<City, Key>[]> => {
   const page = options.page ?? 0;
   const limit = options.limit ?? 100;
@@ -63,13 +57,7 @@ const queryCities = async <Key extends keyof City>(
  */
 const getCityById = async <Key extends keyof City>(
   id: string,
-  keys: Key[] = [
-    'id',
-    'name',
-    'circuits',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'name', 'circuits', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<City, Key> | null> => {
   return prisma.city.findUnique({
     where: { id },
@@ -121,4 +109,4 @@ export default {
   getCityById,
   updateCityById,
   deleteCityById
- };
+};

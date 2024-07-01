@@ -8,7 +8,12 @@ import ApiError from '../utils/ApiError';
  * @param {Object} circuitBody
  * @returns {Promise<Circuit>}
  */
-const createCircuit = async (name: string, image: string, code: string, cityId: string): Promise<Circuit> => {
+const createCircuit = async (
+  name: string,
+  image: string,
+  code: string,
+  cityId: string
+): Promise<Circuit> => {
   return prisma.circuit.create({
     data: {
       name,
@@ -36,14 +41,7 @@ const queryCircuit = async <Key extends keyof Circuit>(
     sortBy?: string;
     sortType?: 'asc' | 'desc';
   },
-  keys: Key[] = [
-    'id',
-    'name',
-    'image',
-    'code',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'name', 'image', 'code', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Circuit, Key>[]> => {
   const page = options.page ?? 0;
   const limit = options.limit ?? 10;
@@ -67,15 +65,7 @@ const queryCircuit = async <Key extends keyof Circuit>(
  */
 const getCircuitById = async <Key extends keyof Circuit>(
   id: string,
-  keys: Key[] = [
-    'id',
-    'name',
-    'image',
-    'code',
-    'subcircuits',
-    'createdAt',
-    'updatedAt'
-  ] as Key[]
+  keys: Key[] = ['id', 'name', 'image', 'code', 'subcircuits', 'createdAt', 'updatedAt'] as Key[]
 ): Promise<Pick<Circuit, Key> | null> => {
   return prisma.circuit.findUnique({
     where: { id },
@@ -92,7 +82,7 @@ const getCircuitById = async <Key extends keyof Circuit>(
 const updateCircuitById = async <Key extends keyof Circuit>(
   circuitId: string,
   updateBody: Prisma.CircuitUpdateInput,
-  keys: Key[] = ['id','name', 'image','code'] as Key[]
+  keys: Key[] = ['id', 'name', 'image', 'code'] as Key[]
 ): Promise<Pick<Circuit, Key> | null> => {
   const user = await getCircuitById(circuitId, ['id', 'name']);
   if (!user) {

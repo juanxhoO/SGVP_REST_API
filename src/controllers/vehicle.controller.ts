@@ -5,7 +5,8 @@ import catchAsync from '../utils/catchAsync';
 import { vehicleService } from '../services';
 
 const createVehicle = catchAsync(async (req, res) => {
-  const {  name,
+  const {
+    name,
     chasis,
     model,
     brand,
@@ -16,8 +17,11 @@ const createVehicle = catchAsync(async (req, res) => {
     engine_cc,
     engine,
     carringcapacity,
-    passengers,userId } = req.body;
-  const vehicle = await vehicleService.createVehicle( name,
+    passengers,
+    userId
+  } = req.body;
+  const vehicle = await vehicleService.createVehicle(
+    name,
     chasis,
     model,
     brand,
@@ -28,7 +32,8 @@ const createVehicle = catchAsync(async (req, res) => {
     engine_cc,
     engine,
     carringcapacity,
-    passengers,userId
+    passengers,
+    userId
   );
   res.status(httpStatus.CREATED).send(vehicle);
 });

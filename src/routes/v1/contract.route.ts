@@ -18,7 +18,11 @@ router
   .route('/:contractId')
   .get(auth('getUsers'), validate(contractValidation.getContract), contractController.getContract)
   // .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth('manageUsers'), validate(contractValidation.deleteContract), contractController.deleteContract);
+  .delete(
+    auth('manageUsers'),
+    validate(contractValidation.deleteContract),
+    contractController.deleteContract
+  );
 
 export default router;
 
