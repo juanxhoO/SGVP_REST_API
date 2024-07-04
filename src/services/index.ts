@@ -11,3 +11,4 @@ export { default as contractService } from './contract.service';
 export { default as circuitService } from './circuit.service';
 export { default as cityService } from './city.service';
 export { default as subcircuitService } from './subcircuit.service';
+export { default as workshopService } from './workshop.service';

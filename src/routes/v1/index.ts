@@ -12,7 +12,7 @@ import contractRoute from './contract.route';
 import circuitRoute from './circuit.route';
 import citiestRoute from './city.route';
 import subcircuitsRoute from './subcircuit.route';
-
+import workshopRoute from './workshop.route'
 const router = express.Router();
 
 const defaultRoutes = [
@@ -27,6 +27,10 @@ const defaultRoutes = [
   {
     path: '/circuits',
     route: circuitRoute
+  },
+  {
+    path: '/workshops',
+    route: workshopRoute
   },
   {
     path: '/cities',

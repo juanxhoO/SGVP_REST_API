@@ -20,13 +20,13 @@ const getContracts = {
 
 const getContract = {
   params: Joi.object().keys({
-    userId: Joi.string()
+    contractId: Joi.string()
   })
 };
 
 const updateContract = {
   params: Joi.object().keys({
-    userId: Joi.string()
+    contractId: Joi.string()
   }),
   body: Joi.object()
     .keys({
@@ -41,7 +41,7 @@ const updateContract = {
 
 const deleteContract = {
   params: Joi.object().keys({
-    orderId: Joi.string()
+    contractId: Joi.string()
   })
 };
 

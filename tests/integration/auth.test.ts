@@ -758,7 +758,7 @@ describe('Auth middleware', () => {
 
   test('should call next with unauthorized error if user is not found', async () => {
     const userOneAccessToken = tokenService.generateToken(
-      2000,
+      "cd8823c9-34e6-41fd-9d97-602218ac3408",
       moment().add(config.jwt.accessExpirationMinutes, 'minutes'),
       TokenType.ACCESS
     );

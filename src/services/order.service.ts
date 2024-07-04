@@ -58,6 +58,9 @@ const queryOrders = async <Key extends keyof Order>(
     'status',
     'maintenanceDay',
     'createdAt',
+    'observations',
+    'maintenance',
+    'selectedTime',
     'updatedAt'
   ] as Key[]
 ): Promise<Pick<Order, Key>[]> => {

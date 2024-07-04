@@ -2,19 +2,21 @@ import { Workshop, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
-
 /**
  * Create a user
  * @param {Object} userBody
  * @returns {Promise<Workshop>}
  */
-const createVehicle = async (email: string, name?: string): Promise<Workshop> => {
+const createWorkshop = async (name: string, email: string, address: string, phone: string): Promise<Workshop> => {
   // if (await getUserByEmail(email)) {
   //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   // }
-  return prisma.vehicle.create({
+  return prisma.workshop.create({
     data: {
-      name
+      name,
+      email,
+      address,
+      phone
     }
   });
 };
@@ -28,7 +30,7 @@ const createVehicle = async (email: string, name?: string): Promise<Workshop> =>
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryVehicles = async <Key extends keyof Vehicle>(
+const queryWorkshops = async <Key extends keyof Workshop>(
   filter: object,
   options: {
     limit?: number;
@@ -46,7 +48,7 @@ const queryVehicles = async <Key extends keyof Vehicle>(
     'createdAt',
     'updatedAt'
   ] as Key[]
-): Promise<Pick<Vehicle, Key>[]> => {
+): Promise<Pick<Workshop, Key>[]> => {
   const page = options.page ?? 1;
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
@@ -58,17 +60,17 @@ const queryVehicles = async <Key extends keyof Vehicle>(
     take: limit,
     orderBy: sortBy ? { [sortBy]: sortType } : undefined
   });
-  return users as Pick<Vehicle, Key>[];
+  return users as Pick<Workshop, Key>[];
 };
 
 /**
  * Get user by id
  * @param {ObjectId} id
  * @param {Array<Key>} keys
- * @returns {Promise<Pick<User, Key> | null>}
+ * @returns {Promise<Pick<Workshop, Key> | null>}
  */
-const getVehicleById = async <Key extends keyof Vehicle>(
-  id: number,
+const getWorkshopById = async <Key extends keyof Workshop>(
+  id: string,
   keys: Key[] = [
     'id',
     'email',
@@ -79,11 +81,11 @@ const getVehicleById = async <Key extends keyof Vehicle>(
     'createdAt',
     'updatedAt'
   ] as Key[]
-): Promise<Pick<Vehicle, Key> | null> => {
+): Promise<Pick<Workshop, Key> | null> => {
   return prisma.user.findUnique({
     where: { id },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-  }) as Promise<Pick<Vehicle, Key> | null>;
+  }) as Promise<Pick<Workshop, Key> | null>;
 };
 
 /**
@@ -92,12 +94,12 @@ const getVehicleById = async <Key extends keyof Vehicle>(
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateVehicleById = async <Key extends keyof Vehicle>(
-  userId: number,
+const updateWorkshopById = async <Key extends keyof Workshop>(
+  userId: string,
   updateBody: Prisma.UserUpdateInput,
   keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
-): Promise<Pick<Vehicle, Key> | null> => {
-  const user = await getVehicleById(userId, ['id', 'email', 'name']);
+): Promise<Pick<Workshop, Key> | null> => {
+  const user = await getWorkshopById(userId, ['id', 'email', 'name']);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -110,16 +112,16 @@ const updateVehicleById = async <Key extends keyof Vehicle>(
     data: updateBody,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   });
-  return updatedUser as Pick<User, Key> | null;
+  return updatedUser as Pick<Workshop, Key> | null;
 };
 
 /**
  * Delete user by id
  * @param {ObjectId} userId
- * @returns {Promise<User>}
+ * @returns {Promise<Workshop>}
  */
-const deleteVehicleById = async (userId: number): Promise<User> => {
-  const user = await deleteVehicleById(userId);
+const deleteWorkshopById = async (userId: number): Promise<Workshop> => {
+  const user = await deleteWorkshopById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -128,9 +130,9 @@ const deleteVehicleById = async (userId: number): Promise<User> => {
 };
 
 export default {
-  createVehicle,
-  queryVehicles,
-  getVehicleById,
-  updateVehicleById,
-  deleteVehicleById
+  createWorkshop,
+  queryWorkshops,
+  getWorkshopById,
+  updateWorkshopById,
+  deleteWorkshopById
 };

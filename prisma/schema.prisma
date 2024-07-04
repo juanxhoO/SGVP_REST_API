@@ -56,6 +56,8 @@ model Vehicle {
   orders          Order[]
 }
 
+
+
 model Report {
   id        String   @id @default(uuid())
   name      String
@@ -114,13 +116,6 @@ model SubCircuit {
   users     User[]
 }
 
-model Distrit {
-  id    String @id @default(uuid())
-  name  String
-  code  String
-  image String
-}
-
 model City {
   id        String    @id @default(uuid())
   name      String
@@ -147,6 +142,7 @@ model Notification {
   id        String   @id @default(uuid())
   name      String
   type      String
+  content   String
   createdAt DateTime @updatedAt
 }
 

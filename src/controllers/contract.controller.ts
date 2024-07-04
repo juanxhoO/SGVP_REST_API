@@ -18,7 +18,7 @@ const getContracts = catchAsync(async (req, res) => {
 });
 
 const getContract = catchAsync(async (req, res) => {
-  const user = await contractService.getContractById(req.params.userId);
+  const user = await contractService.getContractById(req.params.contractId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -26,12 +26,12 @@ const getContract = catchAsync(async (req, res) => {
 });
 
 const updateContract = catchAsync(async (req, res) => {
-  const user = await contractService.updateContractById(req.params.userId, req.body);
+  const user = await contractService.updateContractById(req.params.contractId, req.body);
   res.send(user);
 });
 
 const deleteContract = catchAsync(async (req, res) => {
-  await contractService.deleteContractById(req.params.userId);
+  await contractService.deleteContractById(req.params.contractId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

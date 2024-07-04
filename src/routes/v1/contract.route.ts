@@ -16,10 +16,9 @@ router
 
 router
   .route('/:contractId')
-  .get(auth('getUsers'), validate(contractValidation.getContract), contractController.getContract)
+  .get( validate(contractValidation.getContract), contractController.getContract)
   // .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(
-    auth('manageUsers'),
     validate(contractValidation.deleteContract),
     contractController.deleteContract
   );
