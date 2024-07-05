@@ -12,3 +12,5 @@ export { default as circuitService } from './circuit.service';
 export { default as cityService } from './city.service';
 export { default as subcircuitService } from './subcircuit.service';
 export { default as workshopService } from './workshop.service';
+export { default as bonusService } from './bonus.service';
+export { default as privatevehicleService } from './privatevehicle.service';

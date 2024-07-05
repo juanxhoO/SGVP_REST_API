@@ -11,25 +11,26 @@ datasource db {
 }
 
 model User {
-  id              String      @id @default(uuid())
-  email           String      @unique
+  id              String           @id @default(uuid())
+  email           String           @unique
   name            String?
   lastname        String?
   phone           String?
   password        String
   id_card         String?
   birthdate       DateTime?
-  city            String? 
+  city            String?
   bloodType       String?
   birthplace      String?
-  subcircuitId    String?     @unique
-  subcircuit      SubCircuit? @relation(fields: [subcircuitId], references: [id])
+  subcircuitId    String?          @unique
+  subcircuit      SubCircuit?      @relation(fields: [subcircuitId], references: [id])
   rank            OfficeRank
   vehicle         Vehicle[]
-  role            Role        @default(USER)
-  isEmailVerified Boolean     @default(false)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  privatevehicle  PrivateVehicle[]
+  role            Role             @default(USER)
+  isEmailVerified Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   Token           Token[]
   orders          Order[]
   reports         Report[]
@@ -56,7 +57,34 @@ model Vehicle {
   orders          Order[]
 }
 
+model PrivateVehicle {
+  id        String   @id @default(uuid())
+  name      String
+  images    String?
+  chasis    String
+  model     String
+  brand     String
+  plate     String
+  engine_cc Int?
+  type      String
+  engine    String?
+  mileage   Int
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
+model Bonus {
+  id            String @id @default(uuid())
+  name          String
+  brand        String
+  type          String
+  mileage       Int
+  dangerousness String
+   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 model Report {
   id        String   @id @default(uuid())
@@ -170,7 +198,7 @@ model Order {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   maintenance    Maintenance @relation(fields: [maintenanceId], references: [id])
-  maintenanceId  String       // relation scalar field (used in the `@relation` attribute above)
+  maintenanceId  String // relation scalar field (used in the `@relation` attribute above)
 }
 
 model File {
@@ -221,6 +249,13 @@ enum OrderStatus {
   CANCELLED
   PENDANT
 }
+
+enum DangerousType {
+  LOW
+  MEDIUM
+  HIGH
+}
+
 
 enum TokenType {
   ACCESS

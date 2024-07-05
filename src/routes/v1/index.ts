@@ -13,12 +13,23 @@ import circuitRoute from './circuit.route';
 import citiestRoute from './city.route';
 import subcircuitsRoute from './subcircuit.route';
 import workshopRoute from './workshop.route'
+import bonusRoute from './bonus.route'
+import privatevehicleRoute from './privatevehicle.route'
+
 const router = express.Router();
 
 const defaultRoutes = [
   {
     path: '/auth',
     route: authRoute
+  },
+  {
+    path: '/privatevehicles',
+    route: privatevehicleRoute
+  },
+  {
+    path: '/bonuses',
+    route: bonusRoute
   },
   {
     path: '/subcircuits',
