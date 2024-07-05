@@ -7,17 +7,17 @@ import { bonusService } from '../services';
 const createBonus = catchAsync(async (req, res) => {
     const {
         name,
-        brand,
-        type,
+        brands,
         mileage,
-        dangerousness
+        dangerousness,
+        price
     } = req.body;
     const vehicle = await bonusService.createBonus(
         name,
-        brand,
-        type,
+        brands,
         mileage,
-        dangerousness
+        dangerousness,
+        price
     );
     res.status(httpStatus.CREATED).send(vehicle);
 });

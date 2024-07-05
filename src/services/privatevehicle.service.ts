@@ -18,11 +18,9 @@ const createPrivateVehicle = async (
   images?: string,
   engine_cc?: number,
   engine?: string,
-  carringcapacity?: number,
-  passengers?: number,
   userId?: string
 ): Promise<PrivateVehicle> => {
-  return prisma.vehicle.create({
+  return prisma.privateVehicle.create({
     data: {
       name,
       chasis,
@@ -34,8 +32,6 @@ const createPrivateVehicle = async (
       images,
       engine_cc,
       engine,
-      carringcapacity,
-      passengers,
       userId
     }
   });
@@ -70,8 +66,6 @@ const queryPrivateVehicles = async <Key extends keyof PrivateVehicle>(
     'images',
     'engine_cc',
     'engine',
-    'carringcapacity',
-    'passengers',
     'createdAt',
     'updatedAt'
   ] as Key[]
@@ -80,7 +74,7 @@ const queryPrivateVehicles = async <Key extends keyof PrivateVehicle>(
   const limit = options.limit ?? 10;
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
-  const vehicles = await prisma.vehicle.findMany({
+  const vehicles = await prisma.privateVehicle.findMany({
     where: filter,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     skip: page * limit,
@@ -109,16 +103,13 @@ const getPrivateVehicleById = async <Key extends keyof PrivateVehicle>(
     'engine_cc',
     'engine',
     'type',
-    'carringcapacity',
-    'passengers',
     'mileage',
     'createdAt',
     'updatedAt',
     'user',
-    'orders'
   ] as Key[]
 ): Promise<Pick<PrivateVehicle, Key> | null> => {
-  return prisma.vehicle.findUnique({
+  return prisma.privateVehicle.findUnique({
     where: { id },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   }) as Promise<Pick<PrivateVehicle, Key> | null>;
@@ -151,7 +142,7 @@ const updatePrivateVehicleById = async <Key extends keyof PrivateVehicle>(
   if (!vehicle) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  const updatedUser = await prisma.vehicle.update({
+  const updatedUser = await prisma.privateVehicle.update({
     where: { id: vehicle.id },
     data: updateBody,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
@@ -169,7 +160,7 @@ const deletePrivateVehicleById = async (vehicleId: string): Promise<PrivateVehic
   if (!vehicle) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  await prisma.vehicle.delete({ where: { id: vehicle.id } });
+  await prisma.privateVehicle.delete({ where: { id: vehicle.id } });
   return vehicle;
 };
 

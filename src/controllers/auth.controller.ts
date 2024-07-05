@@ -14,9 +14,7 @@ const register = catchAsync(async (req, res) => {
     lastname,
     phone,
     id_card,
-    birthdate,
-    birthplace,
-    bloodType
+
   } = req.body;
   const user = await userService.createUser(
     email,
@@ -27,9 +25,6 @@ const register = catchAsync(async (req, res) => {
     lastname,
     phone,
     id_card,
-    birthdate,
-    birthplace,
-    bloodType
   );
   const userWithoutPassword = exclude(user, ['password', 'createdAt', 'updatedAt']);
   const tokens = await tokenService.generateAuthTokens(user);

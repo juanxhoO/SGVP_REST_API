@@ -10,18 +10,18 @@ import ApiError from '../utils/ApiError';
  */
 const createBonus = async (
     name: string,
-    brand: string,
-    type: string,
+    brands: string[],
     mileage: number,
-    dangerousness: string
+    dangerousness: string,
+    price: number
 ): Promise<Bonus> => {
     return prisma.bonus.create({
         data: {
             name,
-            brand,
-            type,
+            brands,
             mileage,
-            dangerousness
+            dangerousness,
+            price
         }
     });
 };
@@ -46,9 +46,9 @@ const queryBonuses = async <Key extends keyof Bonus>(
     keys: Key[] = [
         'id',
         'name',
-        'brand',
+        'brands',
+        'price',
         'dangerousness',
-        'type',
         'mileage',
         'createdAt',
         'updatedAt'
@@ -79,9 +79,8 @@ const getBonusById = async <Key extends keyof Bonus>(
     keys: Key[] = [
         'id',
         'name',
-        'brand',
+        'brands',
         'dangerousness',
-        'type',
         'mileage',
         'createdAt',
         'updatedAt',
@@ -104,7 +103,7 @@ const updateBonusById = async <Key extends keyof Bonus>(
     updateBody: Prisma.VehicleUpdateInput,
     keys: Key[] = ['id', 'name', 'brand', 'dangerousness', 'type'] as Key[]
 ): Promise<Pick<Bonus, Key> | null> => {
-    const vehicle = await getBonusById(bonusId, ['id', 'name', 'brand', 'dangerousness', 'type']);
+    const vehicle = await getBonusById(bonusId, ['id', 'name', 'dangerousness']);
     if (!vehicle) {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }

@@ -4,10 +4,10 @@ import { password } from './custom.validation';
 const createBonus = {
     body: Joi.object().keys({
         name: Joi.string().required(),
-        brand: Joi.string().required(),
-        type: Joi.string().required(),
+        brands: Joi.array().required(),
         mileage: Joi.number(),
         dangerousness: Joi.string(),
+        price:Joi.number().required()
     })
 };
 

@@ -76,14 +76,14 @@ model PrivateVehicle {
 }
 
 model Bonus {
-  id            String @id @default(uuid())
+  id            String   @id @default(uuid())
   name          String
-  brand        String
-  type          String
+  brands        String[]
   mileage       Int
   dangerousness String
-   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  price         Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Report {
@@ -255,7 +255,6 @@ enum DangerousType {
   MEDIUM
   HIGH
 }
-
 
 enum TokenType {
   ACCESS
