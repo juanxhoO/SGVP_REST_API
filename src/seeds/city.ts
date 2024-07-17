@@ -281,7 +281,21 @@ async function main() {
       data: vehicle
     });
   }
+  for (const vehicle of vehicles) {
+    await prisma.vehicle.create({
+      data: vehicle,
+      subcircuits: {
+        create: [
+          { name: 'Subcircuit 1' },
+          { name: 'Subcircuit 2' },
+        ]
+      }
+    });
+  }
 }
+
+
+
 
 main()
   .catch((e) => {

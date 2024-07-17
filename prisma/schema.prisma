@@ -24,7 +24,7 @@ model User {
   birthplace      String?
   subcircuitId    String?     @unique
   subcircuit      SubCircuit? @relation(fields: [subcircuitId], references: [id])
-  rank            OfficeRank
+  rank            OfficeRank?
   vehicle         Vehicle[]
   role            Role        @default(USER)
   isEmailVerified Boolean     @default(false)
