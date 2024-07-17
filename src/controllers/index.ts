@@ -9,3 +9,4 @@ export { default as circuitController } from './circuit.controller';
 export { default as cityController } from './city.controller';
 export { default as subcircuitController } from './subcircuit.controller';
 export { default as workshopController } from './workshop.controller';
+export { default as reportController } from './report.controller';

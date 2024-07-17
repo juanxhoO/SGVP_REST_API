@@ -19,7 +19,7 @@ model User {
   password        String
   id_card         String?
   birthdate       DateTime?
-  city            String? 
+  city            String?
   bloodType       String?
   birthplace      String?
   subcircuitId    String?     @unique
@@ -54,9 +54,8 @@ model Vehicle {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   orders          Order[]
+  report          Report?
 }
-
-
 
 model Report {
   id        String   @id @default(uuid())
@@ -68,6 +67,8 @@ model Report {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  vehicleId String?  @unique
+  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
 }
 
 model Workshop {
@@ -170,7 +171,7 @@ model Order {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   maintenance    Maintenance @relation(fields: [maintenanceId], references: [id])
-  maintenanceId  String       // relation scalar field (used in the `@relation` attribute above)
+  maintenanceId  String // relation scalar field (used in the `@relation` attribute above)
 }
 
 model File {

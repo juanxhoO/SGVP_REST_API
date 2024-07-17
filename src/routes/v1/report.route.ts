@@ -1,24 +1,24 @@
 import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
-import { userValidation } from '../../validations';
-import { userController } from '../../controllers';
+import { reportValidation } from '../../validations';
+import { reportController } from '../../controllers';
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(validate(userValidation.createUser), userController.createUser)
-  .get(validate(userValidation.getUsers), userController.getUsers);
+  .post(validate(reportValidation.createReport), reportController.createReport)
+  .get(validate(reportValidation.getReports), reportController.getReports);
 
 // .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
 // .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
   .route('/:reportId')
-  .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-  .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+  .get(auth('getUsers'), validate(reportValidation.getReport), reportController.getReport)
+  .patch(validate(reportValidation.updateReport), reportController.updateReport)
+  .delete(validate(reportValidation.deleteReport), reportController.deleteReport);
 
 export default router;
 

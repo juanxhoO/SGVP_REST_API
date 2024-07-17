@@ -13,7 +13,8 @@ const createReport = async (
   files: string,
   images: string,
   content: string,
-  userId: string
+  userId: string,
+  vehicleId?: string
 ): Promise<Report> => {
   // if (await getUserByEmail(email)) {
   //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
@@ -24,7 +25,8 @@ const createReport = async (
       files,
       images,
       content,
-      userId
+      userId,
+      vehicleId
     }
   });
 };

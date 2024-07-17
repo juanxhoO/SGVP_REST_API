@@ -1,40 +1,42 @@
-import { Role } from '@prisma/client';
 import Joi from 'joi';
-import { password } from './custom.validation';
 
-const createUser = {
+const createReport = {
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
-    role: Joi.string().required().valid(Role.USER, Role.ADMIN)
+    name: Joi.string(),
+    files: Joi.string(),
+    date: Joi.date(),
+    images: Joi.string(),
+    content: Joi.string(),
+    userId: Joi.string(),
+    vehicleId: Joi.string()
   })
 };
 
-const getUsers = {
+const getReports = {
   query: Joi.object().keys({
     name: Joi.string(),
-    role: Joi.string(),
-    sortBy: Joi.string(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer()
+    files: Joi.string(),
+    date: Joi.date(),
+    images: Joi.string(),
+    content: Joi.string(),
+    userId: Joi.string(),
+    vehicleId: Joi.string()
   })
 };
 
-const getUser = {
+const getReport = {
   params: Joi.object().keys({
-    userId: Joi.number().integer()
+    reportId: Joi.number().integer()
   })
 };
 
-const updateUser = {
+const updateReport = {
   params: Joi.object().keys({
-    userId: Joi.string()
+    reportId: Joi.string()
   }),
   body: Joi.object()
     .keys({
       email: Joi.string().email(),
-      password: Joi.string().custom(password),
       lastname: Joi.string(),
       phone: Joi.string(),
       name: Joi.string(),
@@ -43,16 +45,16 @@ const updateUser = {
     .min(1)
 };
 
-const deleteUser = {
+const deleteReport = {
   params: Joi.object().keys({
     userId: Joi.string()
   })
 };
 
 export default {
-  createUser,
-  getUsers,
-  getUser,
-  updateUser,
-  deleteUser
+  createReport,
+  getReport,
+  getReports,
+  updateReport,
+  deleteReport
 };

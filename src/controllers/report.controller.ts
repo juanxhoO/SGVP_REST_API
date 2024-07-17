@@ -5,8 +5,8 @@ import catchAsync from '../utils/catchAsync';
 import { reportService } from '../services';
 
 const createReport = catchAsync(async (req, res) => {
-  const { name, sku, stock, price, condition, brand, model } = req.body;
-  const spare = await reportService.createReport(name, sku, stock, price, condition, brand, model);
+  const { name, files, images, content, userId, vehicleId } = req.body;
+  const spare = await reportService.createReport(name, files, images, content, userId, vehicleId);
   res.status(httpStatus.CREATED).send(spare);
 });
 
