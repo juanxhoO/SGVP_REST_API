@@ -37,6 +37,21 @@ const cities = [
   }
 ];
 
+const workshops = [
+  {
+    name: 'Mecanica 2',
+    email: 'mecanica2@gmail.com',
+    address: 'Calle 123, Pje Amazonas 3',
+    phone: '0999876543'
+  },
+  {
+    name: 'Mecanica 3',
+    email: 'mecanica3@gmail.com',
+    address: 'Av Principal, Pje Amazonas 4',
+    phone: '0999898765'
+  }
+];
+
 const spares = [
   {
     name: 'Filtro de Aceite K&N',
@@ -140,6 +155,30 @@ const spares = [
   }
 ];
 
+const users = [
+  {
+    email: 'maria.smith@example.com',
+    password: 'Test1234',
+    name: 'Maria',
+    lastname: 'Smith',
+    phone: '9876543210',
+    id_card: '1928374650',
+    bloodType: 'A+',
+    role: 'ADMIN',
+    rank: 'CAPTAIN'
+  },
+  {
+    email: 'john.doe@example.com',
+    password: 'Test1234',
+    name: 'John',
+    lastname: 'Doe',
+    phone: '4567890123',
+    id_card: '5647382910',
+    bloodType: 'B-',
+    role: 'USER',
+    rank: 'MAJOR'
+  }
+];
 const maintenances = [
   {
     name: 'Mantenimiento 1',
@@ -280,6 +319,17 @@ async function main() {
   for (const vehicle of vehicles) {
     await prisma.vehicle.create({
       data: vehicle
+    });
+  }
+  for (const user of users) {
+    await prisma.user.create({
+      data: user
+    });
+  }
+
+  for (const workshop of workshops) {
+    await prisma.workshop.create({
+      data: workshop
     });
   }
 }
