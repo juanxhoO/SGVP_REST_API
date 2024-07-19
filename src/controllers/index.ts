@@ -11,3 +11,4 @@ export { default as subcircuitController } from './subcircuit.controller';
 export { default as workshopController } from './workshop.controller';
 export { default as reportController } from './report.controller';
 export { default as lubricantController } from './lubricant.controller';
+export { default as spareOrderController } from './spareorder.controller';

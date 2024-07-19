@@ -1,23 +1,23 @@
 import express from 'express';
 import validate from '../../middlewares/validate';
-import { libricantValidation } from '../../validations';
+import { lubricantValidation } from '../../validations';
 import { lubricantController } from '../../controllers';
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(validate(libricantValidation.createLubricant), lubricantController.createLubricant)
-  .get(validate(libricantValidation.getLubricants), lubricantController.getLubricants);
+  .post(validate(lubricantValidation.createLubricant), lubricantController.createLubricant)
+  .get(validate(lubricantValidation.getLubricants), lubricantController.getLubricants);
 
 // .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
 // .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
   .route('/:lubricantId')
-  .get(validate(libricantValidation.getLubricant), lubricantController.getLubricant)
-  .patch(validate(libricantValidation.updateLubricant), lubricantController.updateLubricant)
-  .delete(validate(libricantValidation.deleteLubricant), lubricantController.deleteLubricant);
+  .get(validate(lubricantValidation.getLubricant), lubricantController.getLubricant)
+  .patch(validate(lubricantValidation.updateLubricant), lubricantController.updateLubricant)
+  .delete(validate(lubricantValidation.deleteLubricant), lubricantController.deleteLubricant);
 
 export default router;
 

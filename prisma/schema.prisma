@@ -11,8 +11,8 @@ datasource db {
 }
 
 model User {
-  id              String      @id @default(uuid())
-  email           String      @unique
+  id              String        @id @default(uuid())
+  email           String        @unique
   name            String?
   lastname        String?
   phone           String?
@@ -22,23 +22,23 @@ model User {
   city            String?
   bloodType       String?
   birthplace      String?
-  subcircuitId    String?     @unique
-  subcircuit      SubCircuit? @relation(fields: [subcircuitId], references: [id])
+  subcircuitId    String?       @unique
+  subcircuit      SubCircuit?   @relation(fields: [subcircuitId], references: [id])
   rank            OfficeRank?
   vehicle         Vehicle[]
-  role            Role        @default(USER)
-  isEmailVerified Boolean     @default(false)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  role            Role          @default(USER)
+  isEmailVerified Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
   Token           Token[]
   orders          Order[]
   reports         Report[]
   lubricants      Lubricant[]
-    sparesOrders    SparesOrders?
+  sparesOrders    SparesOrders[]
 }
 
 model Vehicle {
-  id              String   @id @default(uuid())
+  id              String        @id @default(uuid())
   name            String
   images          String?
   chasis          String
@@ -51,32 +51,31 @@ model Vehicle {
   carringcapacity Int?
   passengers      Int?
   mileage         Int
-  user            User?    @relation(fields: [userId], references: [id])
+  user            User?         @relation(fields: [userId], references: [id])
   userId          String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
   orders          Order[]
   report          Report?
+  sparesOrders    SparesOrders[]
 }
 
-
-
 model Lubricant {
-  id         String   @id @default(uuid())
-  brand      String
-  expireDate DateTime
-  name       String
-  price      Float
-  provider   String
-  quantity   Float
-  stock      Int
-  type       String
-  viscosity  String
-  userId     String
-  user       User?    @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  sparesOrders SparesOrders?
+  id           String        @id @default(uuid())
+  brand        String
+  expireDate   DateTime
+  name         String
+  price        Float
+  provider     String
+  quantity     Float
+  stock        Int
+  type         String
+  viscosity    String
+  userId       String
+  user         User?         @relation(fields: [userId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  sparesOrders SparesOrders[]
 }
 
 model Report {
@@ -91,7 +90,6 @@ model Report {
   updatedAt DateTime @updatedAt
   vehicleId String?  @unique
   vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
-  
 }
 
 model Workshop {
@@ -149,18 +147,18 @@ model City {
 }
 
 model Spare {
-  id        String   @id @default(uuid())
-  name      String
-  image     String?
-  sku       String
-  stock     Int
-  price     Float
-  condition String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  brand     String
-  model     String
-  sparesOrders SparesOrders?
+  id           String        @id @default(uuid())
+  name         String
+  image        String?
+  sku          String
+  stock        Int
+  price        Float
+  condition    String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  brand        String
+  model        String
+  sparesOrders SparesOrders[]
 }
 
 model Notification {
@@ -182,35 +180,37 @@ model Maintenance {
 }
 
 model Order {
-  id             String      @id @default(uuid())
+  id             String        @id @default(uuid())
   vehicleId      String
-  vehicle        Vehicle     @relation(fields: [vehicleId], references: [id])
+  vehicle        Vehicle       @relation(fields: [vehicleId], references: [id])
   mecanicId      Int?
   selectedTime   String
   maintenanceDay DateTime
   userId         String
-  user           User        @relation(fields: [userId], references: [id])
+  user           User          @relation(fields: [userId], references: [id])
   status         OrderStatus
   observations   String?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  maintenance    Maintenance @relation(fields: [maintenanceId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  maintenance    Maintenance   @relation(fields: [maintenanceId], references: [id])
   maintenanceId  String // relation scalar field (used in the `@relation` attribute above)
-  sparesOrders SparesOrders?
+  sparesOrders   SparesOrders[]
 }
 
 model SparesOrders {
-  id            String      @id @default(uuid())
-  userId        String      @unique
-  user          User        @relation(fields: [userId], references: [id])
-  spareId       String      @unique
-  spare         Spare       @relation(fields: [spareId], references: [id])
-  lubricantId   String      @unique
-  lubricant     Lubricant   @relation(fields: [lubricantId], references: [id])
-  orderId       String      @unique
-  order         Order       @relation(fields: [orderId], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id          String     @id @default(uuid())
+  userId      String     
+  user        User       @relation(fields: [userId], references: [id])
+  spareId     String?    
+  spare       Spare?     @relation(fields: [spareId], references: [id])
+  lubricantId String?    
+  lubricant   Lubricant? @relation(fields: [lubricantId], references: [id])
+  orderId     String?     
+  order       Order?      @relation(fields: [orderId], references: [id])
+  vehicleId   String     
+  vehicle     Vehicle    @relation(fields: [vehicleId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model File {

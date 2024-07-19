@@ -14,6 +14,7 @@ import citiestRoute from './city.route';
 import subcircuitsRoute from './subcircuit.route';
 import workshopRoute from './workshop.route'
 import lubricantRoute from './lubricant.route'
+import spareOrderRoute from './spareorder.route'
 
 const router = express.Router();
 
@@ -21,6 +22,10 @@ const defaultRoutes = [
   {
     path: '/auth',
     route: authRoute
+  },
+  {
+    path: '/spareorders',
+    route: spareOrderRoute
   },
   {
     path: '/lubricants',
