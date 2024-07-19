@@ -13,12 +13,18 @@ import circuitRoute from './circuit.route';
 import citiestRoute from './city.route';
 import subcircuitsRoute from './subcircuit.route';
 import workshopRoute from './workshop.route'
+import lubricantRoute from './lubricant.route'
+
 const router = express.Router();
 
 const defaultRoutes = [
   {
     path: '/auth',
     route: authRoute
+  },
+  {
+    path: '/lubricants',
+    route: lubricantRoute
   },
   {
     path: '/subcircuits',

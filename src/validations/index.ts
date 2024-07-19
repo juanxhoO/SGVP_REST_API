@@ -10,3 +10,4 @@ export { default as cityValidation } from './city.validation';
 export { default as subcircuitValidation } from './subcircuit.validation';
 export { default as workshopValidation } from './workshop.validation';
 export { default as reportValidation } from './report.validation';
+export { default as libricantValidation } from './lubricant.validation';

@@ -165,7 +165,6 @@ const users = [
     id_card: '1928374650',
     bloodType: 'A+',
     role: 'ADMIN',
-    rank: 'CAPTAIN'
   },
   {
     email: 'john.doe@example.com',
@@ -176,7 +175,6 @@ const users = [
     id_card: '5647382910',
     bloodType: 'B-',
     role: 'USER',
-    rank: 'MAJOR'
   }
 ];
 const maintenances = [
