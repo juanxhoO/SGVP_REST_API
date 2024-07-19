@@ -16,7 +16,7 @@ router
 
 router
   .route('/:reportId')
-  .get(auth('getUsers'), validate(reportValidation.getReport), reportController.getReport)
+  .get(validate(reportValidation.getReport), reportController.getReport)
   .patch(validate(reportValidation.updateReport), reportController.updateReport)
   .delete(validate(reportValidation.deleteReport), reportController.deleteReport);
 

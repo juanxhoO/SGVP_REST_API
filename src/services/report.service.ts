@@ -9,24 +9,22 @@ import ApiError from '../utils/ApiError';
  * @returns {Promise<Report>}
  */
 const createReport = async (
-  name: string,
-  files: string,
-  images: string,
+  date: Date,
   content: string,
   userId: string,
-  vehicleId?: string
+  vehicleId?: string,
+  files?: string,
+  images?: string,
 ): Promise<Report> => {
-  // if (await getUserByEmail(email)) {
-  //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-  // }
+
   return prisma.report.create({
     data: {
-      name,
-      files,
-      images,
+      date,
       content,
       userId,
-      vehicleId
+      vehicleId,
+      files,
+      images
     }
   });
 };
@@ -91,7 +89,7 @@ const updateReportById = async <Key extends keyof Report>(
   updateBody: Prisma.UserUpdateInput,
   keys: Key[] = ['id', 'name'] as Key[]
 ): Promise<Pick<Report, Key> | null> => {
-  const user = await getReportById(reportId, ['id', 'name']);
+  const user = await getReportById(reportId, ['id']);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }

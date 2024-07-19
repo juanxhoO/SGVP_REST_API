@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 const createReport = {
   body: Joi.object().keys({
-    name: Joi.string(),
+    description:Joi.string(),
     files: Joi.string(),
     date: Joi.date(),
     images: Joi.string(),
@@ -14,7 +14,6 @@ const createReport = {
 
 const getReports = {
   query: Joi.object().keys({
-    name: Joi.string(),
     files: Joi.string(),
     date: Joi.date(),
     images: Joi.string(),

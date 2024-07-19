@@ -59,11 +59,11 @@ model Vehicle {
 
 model Report {
   id        String   @id @default(uuid())
-  name      String
-  files     String
-  images    String
+  files     String?
+  images    String?
   content   String
   userId    String
+  date      DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
